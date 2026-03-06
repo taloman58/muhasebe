@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Satış & Kasa - GSM OFIS PRO</title>
+    <link rel="stylesheet" href="../styles/variables.css" />
+    <link rel="stylesheet" href="../styles/global.css" />
+    <link rel="stylesheet" href="../styles/layout.css" />
+    <link rel="stylesheet" href="../styles/components.css" />
+    <link rel="stylesheet" href="../styles/pos.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- TITLE BAR (Shared) -->
+      <div class="titlebar">
+        <div class="titlebar-left">
+          <div class="titlebar-logo">G</div>
+          <span class="titlebar-title">GSM OFIS PRO</span>
+          <span class="titlebar-version">v1.0.0</span>
+        </div>
+        <div class="titlebar-right">
+          <button class="titlebar-btn" id="btn-minimize" title="Küçült">─</button>
+          <button class="titlebar-btn" id="btn-maximize" title="Ekranı Kapla">☐</button>
+          <button class="titlebar-btn close" id="btn-close" title="Kapat">✕</button>
+        </div>
+      </div>
+
+      <!-- MENU BAR -->
+      <div class="menubar">
+        <button class="menu-item">Dosya</button>
+        <button class="menu-item">İşlemler</button>
+        <button class="menu-item">Raporlar</button>
+        <button class="menu-item">Araçlar</button>
+        <button class="menu-item">Ayarlar</button>
+        <button class="menu-item">Yardım</button>
+        <div class="menubar-right">
+          <div class="user-badge">
+            <div class="avatar">U</div>
+            <span>Yükleniyor...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN TABS -->
+      <div class="main-tabs" id="main-tabs">
+        <a href="dashboard.html" class="main-tab">
+          <span class="tab-icon">📊</span> Panel
+        </a>
+        <a href="devices.html" class="main-tab">
+          <span class="tab-icon">📱</span> Cihazlarım
+        </a>
+        <a href="inventory.html" class="main-tab">
+          <span class="tab-icon">📦</span> Stok İşlemleri
+        </a>
+        <a href="sales.html" class="main-tab">
+          <span class="tab-icon">💰</span> Satış & Kasa
+        </a>
+        <a href="repairs.html" class="main-tab">
+          <span class="tab-icon">🔧</span> Tamir & Servis
+        </a>
+        <a href="customers.html" class="main-tab">
+          <span class="tab-icon">👥</span> Müşteriler & CRM
+        </a>
+        <a href="reports.html" class="main-tab">
+          <span class="tab-icon">📈</span> Raporlar
+        </a>
+        <a href="settings.html" class="main-tab">
+          <span class="tab-icon">⚙️</span> Ayarlar
+        </a>
+      </div>
+
+      <!-- CONTENT AREA -->
+      <div class="content-wrapper">
+        <div class="content-main" id="pages">
+          <div class="page active" id="page-satis">
+            <div class="toolbar">
+              <button class="btn btn-sm satis-sub active btn-primary" data-satissub="satis" onclick="switchSatisSub('satis')">🛒 Yeni Satış</button>
+              <button class="btn btn-sm satis-sub" data-satissub="gecmis" onclick="switchSatisSub('gecmis')">📋 Satış Geçmişi</button>
+              <button class="btn btn-sm satis-sub" data-satissub="kasa" onclick="switchSatisSub('kasa')">💵 Kasa</button>
+            </div>
+
+            <!-- NEW SALE -->
+            <div class="content-body satis-section active" id="satis-satis" style="padding:0;overflow:hidden">
+              <div class="pos-layout">
+                <div class="pos-left">
+                  <div class="pos-source-tabs">
+                    <button class="btn btn-sm pos-src active" data-src="stok" onclick="switchPosSource('stok')">📱 Cihazlarım</button>
+                    <button class="btn btn-sm pos-src" data-src="alis" onclick="switchPosSource('alis')">📦 Stok</button>
+                    <button class="btn btn-sm pos-src" data-src="tamir" onclick="switchPosSource('tamir')">🔧 Tamirler</button>
+                  </div>
+                  <div class="pos-search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="pos-search" placeholder="Cihaz, ürün veya servis no ara..." oninput="posSearch(this.value)" autocomplete="off" />
+                  </div>
+                  <div class="pos-results" id="pos-results">
+                    <div style="text-align:center;padding:30px;color:var(--text-muted)">Aramak için yazmaya başlayın</div>
+                  </div>
+                </div>
+
+                <div class="pos-right">
+                  <div class="pos-cart-header">
+                    <span>🛒 Sepet</span>
+                    <button class="btn btn-sm" onclick="clearCart()" style="font-size:11px">Temizle</button>
+                  </div>
+                  <div class="pos-cart-items" id="pos-cart-items">
+                    <div class="pos-cart-empty" id="pos-cart-empty">Sepet boş</div>
+                  </div>
+                  <!-- Totals -->
+                  <div class="pos-cart-total">
+                    <div class="pos-total-row">
+                      <span>Ara Toplam</span>
+                      <span id="pos-subtotal">0.00 ₺</span>
+                    </div>
+                    <div class="pos-total-row" id="pos-discount-row" style="display:none">
+                      <span>İndirim</span>
+                      <span id="pos-discount-val" style="color:var(--color-success)">-0.00 ₺</span>
+                    </div>
+                    <div class="pos-total-row pos-grand-total">
+                      <span>Genel Toplam</span>
+                      <span id="pos-total">0.00 ₺</span>
+                    </div>
+                  </div>
+                  <!-- Discount -->
+                  <div class="pos-discount-bar">
+                    <label style="font-size:11px;color:var(--text-muted)">İndirim (₺)</label>
+                    <input type="number" id="pos-discount" min="0" placeholder="0" oninput="updateCartTotals()" style="width:80px;padding:4px 8px;border-radius:var(--radius-md);border:1px solid var(--border-color);font-size:13px" />
+                  </div>
+                  <!-- Payment Method -->
+                  <div class="pos-payment-section">
+                    <label class="pos-section-label">Ödeme Yöntemi</label>
+                    <div class="pos-payment-btns">
+                      <button class="pos-pay-btn active" data-pay="nakit" onclick="selectPayment('nakit')">💵 Nakit</button>
+                      <button class="pos-pay-btn" data-pay="kk" onclick="selectPayment('kk')">💳 Kart</button>
+                      <button class="pos-pay-btn" data-pay="havale" onclick="selectPayment('havale')">🏦 Havale</button>
+                      <button class="pos-pay-btn" data-pay="veresiye" onclick="selectPayment('veresiye')">📒 Veresiye</button>
+                    </div>
+                  </div>
+                  <button class="btn btn-primary pos-sell-btn" id="btn-pos-sell" onclick="handleSaleSubmit()">✅ Satışı Tamamla</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- SALES HISTORY -->
+            <div class="content-body satis-section" id="satis-gecmis">
+              <div class="stock-table-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Tarih</th><th>Ürünler</th><th>Müşteri</th>
+                      <th>Toplam</th><th>Ödeme</th><th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sales-history-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- CASHIER -->
+            <div class="content-body satis-section" id="satis-kasa" style="padding: 20px;">
+              <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 20px;">
+                <div class="pos-kasa-card">
+                  <span class="pos-kasa-icon">💵</span>
+                  <span class="pos-kasa-label">Günlük Nakit</span>
+                  <span class="pos-kasa-val" id="kasa-nakit">0,00 ₺</span>
+                </div>
+                <div class="pos-kasa-card">
+                  <span class="pos-kasa-icon">💳</span>
+                  <span class="pos-kasa-label">Kredi Kartı</span>
+                  <span class="pos-kasa-val" id="kasa-kk">0,00 ₺</span>
+                </div>
+                <div class="pos-kasa-card">
+                  <span class="pos-kasa-icon">🏦</span>
+                  <span class="pos-kasa-label">Havale / EFT</span>
+                  <span class="pos-kasa-val" id="kasa-havale">0,00 ₺</span>
+                </div>
+                <div class="pos-kasa-card">
+                  <span class="pos-kasa-icon">📒</span>
+                  <span class="pos-kasa-label">Veresiye</span>
+                  <span class="pos-kasa-val" id="kasa-veresiye" style="color: var(--color-warning);">0,00 ₺</span>
+                </div>
+                <div class="pos-kasa-card" style="border-color: var(--color-accent);">
+                  <span class="pos-kasa-icon">💰</span>
+                  <span class="pos-kasa-label">Günlük Toplam</span>
+                  <span class="pos-kasa-val" id="kasa-toplam" style="color: var(--color-success);">0,00 ₺</span>
+                </div>
+                <div class="pos-kasa-card">
+                  <span class="pos-kasa-icon">📊</span>
+                  <span class="pos-kasa-label">İşlem Sayısı</span>
+                  <span class="pos-kasa-val" id="kasa-islem-sayi">0</span>
+                </div>
+              </div>
+              <div class="stock-table-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Saat</th>
+                      <th>Açıklama</th>
+                      <th>Tür</th>
+                      <th>Tutar</th>
+                    </tr>
+                  </thead>
+                  <tbody id="kasa-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUCCESS MODAL -->
+      <div id="sale-success-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+        <!-- ... modal content ... -->
+      </div>
+
+      <!-- STATUS BAR -->
+      <div class="statusbar">
+        <div class="status-item">
+          <span class="status-dot"></span>
+          <span>Bağlantı: Aktif</span>
+        </div>
+        <div class="status-item">
+          <span id="license-display">🔑 Lisans: Hesaplanıyor...</span>
+        </div>
+        <div class="status-item">
+          <span class="status-role">👤 Yükleniyor...</span>
+        </div>
+        <div class="statusbar-right">
+          <span id="status-clock">--:--</span>
+          <span>v1.0.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/error.js"></script>
+    <script src="../js/click.js"></script>
+    <script src="../js/print-utils.js"></script>
+    <script src="../js/sales-controller.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        if (typeof initSupabase === 'function') initSupabase();
+        if (typeof updateLeftPanel === 'function') updateLeftPanel('satis');
+        if (typeof switchSatisSub === 'function') switchSatisSub('satis');
+      });
+    </script>
+  </body>
+</html>

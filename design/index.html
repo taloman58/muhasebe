@@ -1,0 +1,1195 @@
+﻿<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GSM OFIS PRO v1.0</title>
+
+    <!-- Styles (modüler) -->
+    <link rel="stylesheet" href="styles/variables.css" />
+    <link rel="stylesheet" href="styles/global.css" />
+    <link rel="stylesheet" href="styles/layout.css" />
+    <link rel="stylesheet" href="styles/components.css" />
+    <link rel="stylesheet" href="styles/stock.css" />
+    <link rel="stylesheet" href="styles/pos.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- ═══════════════════════════════════
+       TITLE BAR
+       ═══════════════════════════════════ -->
+      <div class="titlebar">
+        <div class="titlebar-left">
+          <div class="titlebar-logo">G</div>
+          <span class="titlebar-title">GSM OFIS PRO</span>
+          <span class="titlebar-version">v1.0.0</span>
+        </div>
+        <div class="titlebar-right">
+          <button class="titlebar-btn" id="btn-minimize" title="Küçült">
+            ─
+          </button>
+          <button class="titlebar-btn" id="btn-maximize" title="Büyüt">
+            ☐
+          </button>
+          <button class="titlebar-btn close" id="btn-close" title="Kapat">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+       MENU BAR
+       ═══════════════════════════════════ -->
+      <div class="menubar">
+        <button class="menu-item">Dosya</button>
+        <button class="menu-item">İşlemler</button>
+        <button class="menu-item">Raporlar</button>
+        <button class="menu-item">Araçlar</button>
+        <button class="menu-item">Ayarlar</button>
+        <button class="menu-item">Yardım</button>
+
+        <div class="menubar-right">
+          <div class="user-badge">
+            <div class="avatar">A</div>
+            <span>Admin</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+       MAIN TABS
+       ═══════════════════════════════════ -->
+      <div class="main-tabs" id="main-tabs">
+        <button class="main-tab active" data-tab="dashboard">
+          <span class="tab-icon">📊</span> Dashboard
+        </button>
+        <button class="main-tab" data-tab="stok">
+          <span class="tab-icon">&#x1F4F1;</span> Cihazlar&#x131;m
+        </button>
+        <button class="main-tab" data-tab="alis">
+          <span class="tab-icon">&#x1F4E6;</span> Stok
+        </button>
+        <button class="main-tab" data-tab="satis">
+          <span class="tab-icon">💰</span> Satış
+        </button>
+        <button class="main-tab" data-tab="tamir">
+          <span class="tab-icon">🔧</span> Tamir
+        </button>
+
+        <button class="main-tab" data-tab="musteriler">
+          <span class="tab-icon">👥</span> Müşteriler
+        </button>
+        <button class="main-tab" data-tab="raporlar">
+          <span class="tab-icon">📈</span> Raporlar
+        </button>
+        <button class="main-tab" data-tab="ayarlar">
+          <span class="tab-icon">⚙️</span> Ayarlar
+        </button>
+      </div>
+
+      <!-- ═══════════════════════════════════
+       TICKER BAR (Canlı Bilgi Akışı)
+       ═══════════════════════════════════ -->
+      <div class="ticker-bar" id="ticker-bar">
+        <span class="ticker-label">● CANLI</span>
+        <div class="ticker-track-wrapper">
+          <div class="ticker-track" id="ticker-track">
+            <span class="ticker-item">⟳ Veriler yükleniyor...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+       CONTENT AREA
+       ═══════════════════════════════════ -->
+      <div class="content-wrapper">
+        <!-- Sol Panel -->
+        <div class="panel-left">
+          <div class="panel-left-header">Özet Bilgi</div>
+          <div class="panel-left-content" id="panel-left-content">
+            <!-- JS tarafından doldurulacak -->
+          </div>
+        </div>
+
+        <!-- Sayfalar -->
+        <div class="content-main" id="pages">
+          <!-- ──────── DASHBOARD ──────── -->
+          <div class="page active" id="page-dashboard">
+            <div class="content-header">
+              <h2 id="content-title">Dashboard</h2>
+              <div style="display: flex; gap: 8px">
+                <div class="search-bar" style="width: 220px">
+                  <span class="search-icon">🔍</span>
+                  <input type="text" placeholder="Hızlı ara..." />
+                </div>
+              </div>
+            </div>
+            <div class="content-body">
+              <div class="empty-state">
+                <span class="empty-icon">📊</span>
+                <span class="empty-text">Dashboard</span>
+                <span class="empty-desc"
+                  >İstatistikler ve grafikler burada görüntülenecek.</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- ──────── STOK ──────── -->
+          <div class="page" id="page-stok">
+
+            <!-- Stok Alt Sekmeler -->
+            <div class="toolbar">
+              <button class="btn btn-sm stock-sub active" data-stocksub="liste" onclick="switchStockSub('liste')">
+                📋 Cihaz Listesi
+              </button>
+              <button class="btn btn-sm stock-sub" data-stocksub="ekle" onclick="switchStockSub('ekle')">
+                + Yeni Ekle
+              </button>
+              <div class="toolbar-separator"></div>
+              <div class="search-bar" style="width: 220px" id="stock-search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="IMEI, marka, model ara..." id="stock-search" />
+              </div>
+              <select class="form-select" style="padding: 4px 28px 4px 8px; font-size: 12px" id="stock-filter">
+                <option value="">Tüm Durumlar</option>
+                <option value="stokta">Stokta</option>
+                <option value="satildi">Satıldı</option>
+                <option value="tamirde">Tamirde</option>
+                <option value="rezerve">Rezerve</option>
+              </select>
+            </div>
+
+            <!-- ═══ STOK LİSTE ═══ -->
+            <div class="content-body stock-section active" id="stock-liste">
+              <div class="stock-table-wrapper">
+                <table class="data-table" id="stock-table">
+                  <thead>
+                    <tr>
+                      <th>Tür</th>
+                      <th>Marka</th>
+                      <th>Model</th>
+                      <th>Hafıza</th>
+                      <th>IMEI</th>
+                      <th>Kozmetik</th>
+                      <th>Alış ₺</th>
+                      <th>Satış ₺</th>
+                      <th>Durum</th>
+                      <th>Tarih</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stock-tbody">
+                    <!-- JS ile doldurulacak -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="empty-state" id="stock-empty">
+                <span class="empty-icon">📦</span>
+                <span class="empty-text">Stok Listesi Boş</span>
+                <span class="empty-desc">Henüz kayıtlı cihaz yok. "Yeni Ekle" sekmesinden cihaz ekleyin.</span>
+              </div>
+            </div>
+
+            <!-- ═══ YENİ EKLE FORMU ═══ -->
+            <div class="content-body stock-section" id="stock-ekle">
+              <form class="stock-form" id="stock-add-form" onsubmit="handleStockSave(event)">
+
+                <!-- Cihaz Bilgileri -->
+                <div class="form-section">
+                  <div class="form-section-title">📱 Cihaz Bilgileri</div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Tür</label>
+                        <select id="add-type" required>
+                          <option value="telefon">📱 Telefon</option>
+                          <option value="tablet">📱 Tablet</option>
+                          <option value="bilgisayar">🖥️ Bilgisayar</option>
+                          <option value="laptop">💻 Laptop</option>
+                          <option value="diger">📦 Diğer</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Marka</label>
+                        <input type="text" id="add-brand" placeholder="ör: Samsung, Apple" required />
+                      </div>
+                      <div class="form-group">
+                        <label>Model</label>
+                        <input type="text" id="add-model" placeholder="ör: Galaxy S24, iPhone 15" required />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group small">
+                        <label>Hafıza <span class="optional">(opsiyonel)</span></label>
+                        <input type="text" id="add-storage" placeholder="128GB" />
+                      </div>
+                      <div class="form-group small">
+                        <label>RAM <span class="optional">(opsiyonel)</span></label>
+                        <input type="text" id="add-ram" placeholder="8GB" />
+                      </div>
+                      <div class="form-group small">
+                        <label>Ekran <span class="optional">(opsiyonel)</span></label>
+                        <input type="text" id="add-screen" placeholder="6.7 inç" />
+                      </div>
+                      <div class="form-group small">
+                        <label>Renk <span class="optional">(opsiyonel)</span></label>
+                        <input type="text" id="add-color" placeholder="Siyah" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- IMEI -->
+                <div class="form-section">
+                  <div class="form-section-title">🔢 IMEI <span class="optional" style="font-weight:400; color: #94a3b8; font-size:11px; margin-left:6px">(opsiyonel)</span></div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>IMEI 1</label>
+                        <input type="text" id="add-imei" placeholder="15 haneli IMEI" maxlength="20" />
+                      </div>
+                      <div class="form-group">
+                        <label>IMEI 2</label>
+                        <input type="text" id="add-imei2" placeholder="15 haneli IMEI" maxlength="20" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Durum Bilgileri -->
+                <div class="form-section">
+                  <div class="form-section-title">🔍 Durum Bilgileri</div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Kozmetik Durumu <span class="optional">(opsiyonel)</span></label>
+                        <input type="text" id="add-cosmetic" placeholder="ör: Çizik yok, hafif çizik, kırık" />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Sorunlar <span class="optional">(opsiyonel)</span></label>
+                        <textarea id="add-issues" placeholder="Bilinen sorunlar varsa yazın..."></textarea>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Yanındaki Eklentiler <span class="optional">(opsiyonel)</span></label>
+                        <input type="text" id="add-accessories" placeholder="ör: Kutu, şarj, kulaklık" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Alınan Kişi -->
+                <div class="form-section">
+                  <div class="form-section-title">👤 Alınan Kişi Bilgileri</div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Adı Soyadı <span class="optional">(opsiyonel)</span></label>
+                        <input type="text" id="add-seller-name" placeholder="Satıcının adı soyadı" />
+                      </div>
+                      <div class="form-group">
+                        <label>Telefon Numarası <span class="optional">(opsiyonel)</span></label>
+                        <input type="tel" id="add-seller-phone" placeholder="05XX XXX XX XX" />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Kimlik Fotokopisi <span class="optional">(opsiyonel)</span></label>
+                        <div class="file-upload-area" onclick="document.getElementById('add-id-photo').click()">
+                          <span class="upload-icon">📎</span>
+                          <div class="upload-text">
+                            <span id="id-photo-name">Dosya seçmek için tıklayın</span>
+                            <small>JPG, PNG veya PDF - Maks 5MB</small>
+                          </div>
+                          <input type="file" id="add-id-photo" accept="image/*,.pdf" onchange="updateFileName(this, 'id-photo-name')" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Fiyat -->
+                <div class="form-section">
+                  <div class="form-section-title">💰 Fiyat Bilgileri</div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Alış Fiyatı (₺)</label>
+                        <input type="number" id="add-purchase-price" placeholder="0.00" step="0.01" required />
+                      </div>
+                      <div class="form-group">
+                        <label>Satış Fiyatı (₺) <span class="optional">(opsiyonel)</span></label>
+                        <input type="number" id="add-sale-price" placeholder="0.00" step="0.01" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Not + Tarih -->
+                <div class="form-section">
+                  <div class="form-section-title">📝 Not ve Kayıt</div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Not <span class="optional">(opsiyonel)</span></label>
+                        <textarea id="add-notes" placeholder="Ekstra notlar..."></textarea>
+                      </div>
+                    </div>
+                    <div class="auto-date">
+                      📅 Kayıt Tarihi: <span class="date-value" id="add-date">--</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Kaydet -->
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary" id="btn-stock-save">
+                    💾 Kaydet
+                  </button>
+                  <button type="reset" class="btn" onclick="resetStockForm()">
+                    🗑️ Temizle
+                  </button>
+                </div>
+
+              </form>
+            </div>
+
+          </div>
+
+          <!-- ──────── ALIŞ ──────── -->
+          <div class="page" id="page-alis">
+            <!-- Alış Alt Sekmeler -->
+            <div class="toolbar">
+              <button class="btn btn-sm purch-sub active" data-purchsub="ekle" onclick="switchPurchSub('ekle')">
+                + Yeni Alış
+              </button>
+              <button class="btn btn-sm purch-sub" data-purchsub="liste" onclick="switchPurchSub('liste')">
+                📋 Geçmiş İşlemler
+              </button>
+              <div class="toolbar-separator"></div>
+              <div class="search-bar" style="width: 220px;" id="purch-search-bar" style="display:none;">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Tür, kalite, tedarikçi ara..." id="purch-search" />
+              </div>
+            </div>
+
+            <!-- ═══ YENİ ALIŞ FORMU ═══ -->
+            <div class="content-body purch-section active" id="purch-ekle">
+              <form class="stock-form" id="purch-add-form" onsubmit="handlePurchSave(event)">
+                
+                <!-- Ürün Bilgileri -->
+                <div class="form-section">
+                  <div class="form-section-title">📦 Ürün Bilgileri (Aksesuar / Parça)</div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Türü (Zorunlu)</label>
+                        <select id="purch-type" onchange="toggleCustomType()" required>
+                          <option value="">-- Seçiniz --</option>
+                          <option value="EKRAN">Ekran</option>
+                          <option value="KASA">Kasa</option>
+                          <option value="ŞARJ">Şarj Aleti</option>
+                          <option value="KIRILMAZCAM">Kırılmaz Cam</option>
+                          <option value="KILIF">Kılıf</option>
+                          <option value="KULAKLIK">Kulaklık</option>
+                          <option value="POWERBANK">Powerbank</option>
+                          <option value="NANOCAM">Nano Cam</option>
+                          <option value="HAYALET">Hayalet Ekran</option>
+                          <option value="KABLO">Kablo</option>
+                          <option value="SARJ BAŞLIK">Şarj Başlığı</option>
+                          <option value="DİĞER">DİĞER (Kendin Yaz)</option>
+                        </select>
+                      </div>
+                      <div class="form-group" id="purch-custom-type-group" style="display: none;">
+                        <label>Özel Tür / Marka Model</label>
+                        <input type="text" id="purch-custom-type" placeholder="ör: Kordon, Batarya, Vida..." />
+                      </div>
+                      <div class="form-group">
+                        <label>Adet (Zorunlu)</label>
+                        <input type="number" id="purch-qty" placeholder="1" min="1" step="1" required />
+                      </div>
+                    </div>
+
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Renk <span class="optional">(opsiyonel)</span></label>
+                        <input type="text" id="purch-color" placeholder="ör: Siyah, Mavi" />
+                      </div>
+                      <div class="form-group">
+                        <label>Kalite <span class="optional">(opsiyonel)</span></label>
+                        <input type="text" id="purch-quality" placeholder="ör: Orijinal, Revize, A Kalite" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tedarikçi Bilgileri -->
+                <div class="form-section">
+                  <div class="form-section-title">🏢 Tedarikçi Bilgileri <span class="optional" style="margin-left:5px; font-weight:normal;">(opsiyonel)</span></div>
+                  <div class="form-section-body">
+                    <div class="form-row" style="position:relative;">
+                      <div class="form-group">
+                        <label>Adı Soyadı / Firma Adı</label>
+                        <input type="text" id="purch-supplier-name" placeholder="Tedarikçi adı" autocomplete="off" />
+                        <!-- error.js'den autocomplete dropdown eklenecek -->
+                      </div>
+                      <div class="form-group">
+                        <label>Telefon Numarası</label>
+                        <input type="tel" id="purch-supplier-phone" placeholder="05XX XXX XX XX" autocomplete="off" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Fiyat Bilgileri -->
+                <div class="form-section">
+                  <div class="form-section-title">💰 Fiyat Bilgileri</div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Birim Alış Fiyatı (₺) (Zorunlu)</label>
+                        <input type="number" id="purch-price" placeholder="0.00" step="0.01" required />
+                      </div>
+                      <div class="form-group">
+                        <label>Öngörülen Satış Fiyatı (₺) (Zorunlu)</label>
+                        <input type="number" id="purch-sale-price" placeholder="0.00" step="0.01" required />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Ödeme Yöntemi</label>
+                        <select id="purch-payment" required>
+                          <option value="nakit">Nakit</option>
+                          <option value="havale">Havale / EFT</option>
+                          <option value="kredi_karti">Kredi Kartı</option>
+                          <option value="takas">Takas / Cari</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Notlar <span class="optional">(opsiyonel)</span></label>
+                        <input type="text" id="purch-notes" placeholder="Ekstra notlar..." />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary" id="btn-purch-save">
+                    💾 Kaydet
+                  </button>
+                  <button type="reset" class="btn" onclick="resetPurchForm()">
+                    🗑️ Temizle
+                  </button>
+                </div>
+
+              </form>
+            </div>
+
+            <!-- ═══ ALIŞ GEÇMİŞ TABLO ═══ -->
+            <div class="content-body purch-section" id="purch-liste">
+              <div class="stock-table-wrapper">
+                <table class="data-table" id="purch-table">
+                  <thead>
+                    <tr>
+                      <th>Tarih</th>
+                      <th>Tür</th>
+                      <th>Renk / Kalite</th>
+                      <th>Adet</th>
+                      <th>Alış ₺</th>
+                      <th>Satış ₺</th>
+                      <th>Tedarikçi</th>
+                      <th>Ödeme</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="purch-tbody">
+                    <!-- JS ile doldurulacak -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="empty-state" id="purch-empty" style="display:none;">
+                <span class="empty-icon">🛒</span>
+                <span class="empty-text">Alış Kaydı Yok</span>
+                <span class="empty-desc">Henüz bir alış işlemi yapılmamış.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ──────── SATIŞ + KASA (BİRLEŞİK) ──────── -->
+          <div class="page" id="page-satis">
+
+            <!-- Toolbar -->
+            <div class="toolbar">
+              <button class="btn btn-sm satis-sub active btn-primary" data-satissub="satis" onclick="switchSatisSub('satis')">🛒 Yeni Satış</button>
+              <button class="btn btn-sm satis-sub" data-satissub="gecmis" onclick="switchSatisSub('gecmis')">📋 Satış Geçmişi</button>
+              <button class="btn btn-sm satis-sub" data-satissub="kasa" onclick="switchSatisSub('kasa')">💵 Kasa</button>
+            </div>
+
+            <!-- ═══ YENİ SATIŞ ═══ -->
+            <div class="content-body satis-section active" id="satis-satis" style="padding:0;overflow:hidden">
+              <div class="pos-layout">
+
+                <!-- SOL: Ürün Seçim Paneli -->
+                <div class="pos-left">
+                  <div class="pos-source-tabs">
+                    <button class="btn btn-sm pos-src active" data-src="stok" onclick="switchPosSource('stok')">📱 Cihazlarım</button>
+                    <button class="btn btn-sm pos-src" data-src="alis" onclick="switchPosSource('alis')">📦 Stok</button>
+                    <button class="btn btn-sm pos-src" data-src="tamir" onclick="switchPosSource('tamir')">🔧 Tamir</button>
+                  </div>
+                  <div class="pos-search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="pos-search" placeholder="Cihaz, ürün veya servis no ara..." oninput="posSearch(this.value)" autocomplete="off" />
+                  </div>
+                  <div class="pos-results" id="pos-results">
+                    <div style="text-align:center;padding:30px;color:var(--text-muted)">Aramak için yazmaya başlayın</div>
+                  </div>
+                </div>
+
+                <!-- SAĞ: Sepet + Ödeme -->
+                <div class="pos-right">
+                  <div class="pos-cart-header">
+                    <span>🛒 Sepet</span>
+                    <button class="btn btn-sm" onclick="clearCart()" style="font-size:11px">Temizle</button>
+                  </div>
+
+                  <div class="pos-cart-items" id="pos-cart-items">
+                    <div class="pos-cart-empty" id="pos-cart-empty">Sepet boş</div>
+                  </div>
+
+                  <!-- Toplam -->
+                  <div class="pos-cart-total">
+                    <div class="pos-total-row">
+                      <span>Ara Toplam</span>
+                      <span id="pos-subtotal">0,00 ₺</span>
+                    </div>
+                    <div class="pos-total-row" id="pos-discount-row" style="display:none">
+                      <span>İndirim</span>
+                      <span id="pos-discount-val" style="color:var(--color-success)">-0,00 ₺</span>
+                    </div>
+                    <div class="pos-total-row pos-grand-total">
+                      <span>Genel Toplam</span>
+                      <span id="pos-total">0,00 ₺</span>
+                    </div>
+                  </div>
+
+                  <!-- İndirim -->
+                  <div class="pos-discount-bar">
+                    <label style="font-size:11px;color:var(--text-muted)">İndirim (₺)</label>
+                    <input type="number" id="pos-discount" min="0" placeholder="0" oninput="updateCartTotals()" style="width:80px;padding:4px 8px;border-radius:var(--radius-md);border:1px solid var(--border-color);font-size:13px" />
+                  </div>
+
+                  <!-- Ödeme Yöntemi -->
+                  <div class="pos-payment-section">
+                    <label class="pos-section-label">Ödeme Yöntemi</label>
+                    <div class="pos-payment-btns">
+                      <button class="pos-pay-btn active" data-pay="nakit" onclick="selectPayment('nakit')">💵 Nakit</button>
+                      <button class="pos-pay-btn" data-pay="kk" onclick="selectPayment('kk')">💳 K.Kartı</button>
+                      <button class="pos-pay-btn" data-pay="havale" onclick="selectPayment('havale')">🏦 Havale</button>
+                      <button class="pos-pay-btn" data-pay="veresiye" onclick="selectPayment('veresiye')">📒 Veresiye</button>
+                    </div>
+
+                    <!-- Nakit geri para -->
+                    <div id="pos-nakit-panel" class="pos-nakit-panel">
+                      <div style="display:flex;gap:8px;align-items:center">
+                        <label style="font-size:11px;color:var(--text-muted);white-space:nowrap">Alınan (₺)</label>
+                        <input type="number" id="pos-cash-given" min="0" placeholder="0" oninput="calcChange()" style="width:90px;padding:4px 8px;border-radius:var(--radius-md);border:1px solid var(--border-color);font-size:13px" />
+                        <span style="font-size:11px;color:var(--text-muted)">Para Üstü:</span>
+                        <span id="pos-change" style="font-weight:700;color:var(--color-success)">0,00 ₺</span>
+                      </div>
+                    </div>
+
+                    <!-- Alıcı bilgisi (telefon satıldığında + veresiye) -->
+                    <div id="pos-buyer-panel" style="display:none;margin-top:6px">
+                      <label style="font-size:11px;color:var(--text-muted)">Alıcı (Kime Satıldı?)</label>
+                      <div style="position:relative">
+                        <input type="text" id="pos-cust-name" placeholder="Müşteri adı veya telefon..." autocomplete="off" oninput="posCustSearch(this.value)" style="width:100%;margin-top:4px" />
+                        <input type="hidden" id="pos-cust-id" />
+                      </div>
+                      <div id="pos-veresiye-info" style="font-size:11px;color:var(--color-warning);margin-top:4px;display:none"></div>
+                    </div>
+                  </div>
+
+                  <!-- Kaydet -->
+                  <button class="btn btn-primary pos-sell-btn" id="btn-pos-sell" onclick="handleSaleSubmit()">✅ Satışı Tamamla</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ SATIŞ GEÇMİŞİ ═══ -->
+            <div class="content-body satis-section" id="satis-gecmis">
+              <div class="stock-table-wrapper">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Tarih</th><th>Ürünler</th><th>Müşteri</th>
+                      <th>Toplam</th><th>Ödeme</th><th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sales-history-tbody">
+                    <tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-muted)">Yükleniyor...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- ═══ KASA ═══ -->
+            <div class="content-body satis-section" id="satis-kasa">
+              <div style="display:flex;gap:16px;padding:16px;flex-wrap:wrap">
+                <!-- Bugünkü özet -->
+                <div class="pos-kasa-card">
+                  <span class="pos-kasa-icon">💵</span>
+                  <span class="pos-kasa-label">Bugünkü Nakit</span>
+                  <span class="pos-kasa-val" id="kasa-nakit">0,00 ₺</span>
+                </div>
+                <div class="pos-kasa-card">
+                  <span class="pos-kasa-icon">💳</span>
+                  <span class="pos-kasa-label">Bugünkü K. Kartı</span>
+                  <span class="pos-kasa-val" id="kasa-kk">0,00 ₺</span>
+                </div>
+                <div class="pos-kasa-card">
+                  <span class="pos-kasa-icon">🏦</span>
+                  <span class="pos-kasa-label">Bugünkü Havale</span>
+                  <span class="pos-kasa-val" id="kasa-havale">0,00 ₺</span>
+                </div>
+                <div class="pos-kasa-card">
+                  <span class="pos-kasa-icon">📒</span>
+                  <span class="pos-kasa-label">Veresiye (Açık)</span>
+                  <span class="pos-kasa-val" id="kasa-veresiye" style="color:var(--color-warning)">0,00 ₺</span>
+                </div>
+                <div class="pos-kasa-card" style="border-color:var(--color-accent)">
+                  <span class="pos-kasa-icon">�</span>
+                  <span class="pos-kasa-label">Bugünkü Toplam</span>
+                  <span class="pos-kasa-val" id="kasa-toplam" style="color:var(--color-accent)">0,00 ₺</span>
+                </div>
+              </div>
+              <div class="stock-table-wrapper" style="margin:0 16px 16px">
+                <table class="data-table">
+                  <thead>
+                    <tr><th>Tarih</th><th>Açıklama</th><th>Tür</th><th>Tutar</th></tr>
+                  </thead>
+                  <tbody id="kasa-tbody">
+                    <tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text-muted)">Yükleniyor...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ SATIŞ BAŞARI MODALI ═══ -->
+          <div id="sale-success-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:center">
+            <div style="background:var(--bg-panel);border-radius:var(--radius-xl);padding:28px;min-width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+              <div style="text-align:center;margin-bottom:18px">
+                <span style="font-size:52px">✅</span>
+                <h3 style="margin:8px 0 4px;color:var(--color-success)">Satış Tamamlandı!</h3>
+                <p style="color:var(--text-muted);font-size:13px" id="sale-success-info"></p>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+                <button class="btn btn-primary" onclick="salePrintThermal()">🖨️ Termal Fiş</button>
+                <button class="btn btn-primary" onclick="salePrintA4()">📄 A4 Fatura</button>
+                <button class="btn" onclick="saleWhatsApp()">📱 WhatsApp</button>
+                <button class="btn" onclick="closeSaleModal()">✖ Kapat</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ──────── TAMİR ──────── -->
+          <div class="page" id="page-tamir">
+            <!-- Toolbar -->
+            <div class="toolbar">
+              <button class="btn btn-sm tamir-sub active btn-primary" data-tamirsub="ekle" onclick="switchTamirSub('ekle')">+ Yeni Servis</button>
+              <button class="btn btn-sm tamir-sub" data-tamirsub="acik" onclick="switchTamirSub('acik')">🔧 Açık Servisler</button>
+              <button class="btn btn-sm tamir-sub" data-tamirsub="tamamlanan" onclick="switchTamirSub('tamamlanan')">✅ Tamamlanan</button>
+              <div class="toolbar-separator"></div>
+              <div class="search-bar" style="width:220px" id="tamir-search-bar" style="display:none">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="tamir-search" placeholder="Servis no, müşteri, cihaz ara..." />
+              </div>
+            </div>
+
+            <!-- ═══ YENİ SERVİS FORMU ═══ -->
+            <div class="content-body tamir-section active" id="tamir-ekle">
+              <form class="stock-form" id="repair-add-form" onsubmit="handleRepairSave(event)" style="max-width:860px">
+
+                <!-- Servis No (otomatik) -->
+                <div class="form-section">
+                  <div class="form-section-title">🔧 Servis Bilgileri</div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group" style="flex:0.6">
+                        <label>Servis No (Otomatik)</label>
+                        <div style="display:flex;gap:8px;align-items:center">
+                          <input type="text" id="repair-service-no" readonly style="background:var(--bg-panel-alt);font-family:var(--font-mono);font-weight:700;color:var(--color-accent)" />
+                          <button type="button" class="btn btn-sm" onclick="copyServiceNo()" title="Kopyala">�</button>
+                        </div>
+                      </div>
+                      <div class="form-group" style="flex:0.4">
+                        <label>Kabul Tarihi</label>
+                        <input type="datetime-local" id="repair-date" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Cihaz Bilgileri -->
+                <div class="form-section">
+                  <div class="form-section-title">📱 Cihaz Bilgileri</div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group" style="position:relative">
+                        <label>Marka (Zorunlu)</label>
+                        <input type="text" id="repair-brand" placeholder="ör. Apple, Samsung" required autocomplete="off" />
+                      </div>
+                      <div class="form-group" style="position:relative">
+                        <label>Model (Zorunlu)</label>
+                        <input type="text" id="repair-model" placeholder="ör. iPhone 14, S23" required autocomplete="off" />
+                      </div>
+                      <div class="form-group small">
+                        <label>IMEI <span class="optional">(opsiyonel)</span></label>
+                        <input type="text" id="repair-imei" placeholder="15 haneli IMEI" maxlength="17" />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Ekran Şifresi <span class="optional">(opsiyonel)</span></label>
+                        <div style="display:flex;gap:8px">
+                          <input type="password" id="repair-password" placeholder="Varsa ekran şifresi" style="flex:1" />
+                          <button type="button" class="btn btn-sm" onclick="toggleRepairPassword()" id="btn-toggle-pw">👁️</button>
+                        </div>
+                      </div>
+                      <div class="form-group small">
+                        <label>SIM PIN <span class="optional">(opsiyonel)</span></label>
+                        <input type="text" id="repair-sim-pin" placeholder="ör. 1234" maxlength="8" />
+                      </div>
+                    </div>
+
+                    <!-- Ekran Deseni -->
+                    <div class="form-group">
+                      <label>Ekran Deseni <span class="optional">(opsiyonel — mouse ile çizin)</span></label>
+                      <div class="pattern-container" id="pattern-container">
+                        <canvas id="pattern-canvas" width="198" height="198"></canvas>
+                        <button type="button" class="btn btn-sm pattern-clear-btn" onclick="clearPattern()">✕ Temizle</button>
+                      </div>
+                      <input type="hidden" id="repair-pattern" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Arıza & Aksesuar -->
+                <div class="form-section">
+                  <div class="form-section-title">⚠️ Arıza & Ekstralar</div>
+                  <div class="form-section-body">
+                    <div class="form-group">
+                      <label>Arıza Açıklaması (Zorunlu)</label>
+                      <textarea id="repair-fault" rows="3" placeholder="Müşterinin bildirdiği arıza..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label>Yanında Gelenler <span class="optional">(opsiyonel)</span></label>
+                      <div class="accessories-check-row">
+                        <label class="check-label"><input type="checkbox" value="Kılıf" class="acc-check" /> Kılıf</label>
+                        <label class="check-label"><input type="checkbox" value="Kutu" class="acc-check" /> Kutu</label>
+                        <label class="check-label"><input type="checkbox" value="Şarj Aleti" class="acc-check" /> Şarj Aleti</label>
+                        <label class="check-label"><input type="checkbox" value="Kulaklık" class="acc-check" /> Kulaklık</label>
+                        <label class="check-label"><input type="checkbox" value="Ekran Koruyucu" class="acc-check" /> Cam</label>
+                        <input type="text" id="repair-acc-extra" placeholder="Diğer..." style="flex:1;min-width:120px" />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Not <span class="optional">(opsiyonel)</span></label>
+                      <textarea id="repair-notes" rows="2" placeholder="Dahili notlar..."></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Müşteri -->
+                <div class="form-section">
+                  <div class="form-section-title">👤 Müşteri Bilgileri <span class="optional" style="font-weight:normal;margin-left:5px">(opsiyonel — otomatik kaydedilir)</span></div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group" style="position:relative">
+                        <label>Adı Soyadı</label>
+                        <input type="text" id="repair-cust-name" placeholder="Müşteri adı" autocomplete="off" />
+                      </div>
+                      <div class="form-group" style="position:relative">
+                        <label>Telefon</label>
+                        <input type="tel" id="repair-cust-phone" placeholder="0555 555 55 55" autocomplete="off" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Fotoğraf -->
+                <div class="form-section">
+                  <div class="form-section-title">📷 Fotoğraf <span class="optional" style="font-weight:normal;margin-left:5px">(opsiyonel — yerel kayıt)</span></div>
+                  <div class="form-section-body">
+                    <div class="form-group">
+                      <div class="file-upload-area" onclick="document.getElementById('repair-photos').click()">
+                        <span class="upload-icon">�</span>
+                        <div class="upload-text">
+                          <span id="repair-photo-label">Fotoğraf seç (birden fazla olabilir)</span>
+                          <small>JPG, PNG — Maks 5MB/adet</small>
+                        </div>
+                        <input type="file" id="repair-photos" accept="image/*" multiple onchange="updateRepairPhotoLabel(this)" style="display:none" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Butonlar -->
+                <div class="form-actions" style="gap:12px">
+                  <button type="submit" class="btn btn-primary" id="btn-repair-save">💾 Kaydet</button>
+                  <button type="button" class="btn" onclick="resetRepairForm()">🗑️ Temizle</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- ═══ AÇIK SERVİSLER ═══ -->
+            <div class="content-body tamir-section" id="tamir-acik">
+              <div class="stock-table-wrapper">
+                <table class="data-table" id="repair-open-table">
+                  <thead>
+                    <tr>
+                      <th>Servis No</th>
+                      <th>Tarih</th>
+                      <th>Cihaz</th>
+                      <th>Arıza</th>
+                      <th>Müşteri</th>
+                      <th>Durum</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="repair-open-tbody">
+                    <tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-muted)">Yükleniyor...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- ═══ TAMAMLANAN SERVİSLER ═══ -->
+            <div class="content-body tamir-section" id="tamir-tamamlanan">
+              <div class="stock-table-wrapper">
+                <table class="data-table" id="repair-done-table">
+                  <thead>
+                    <tr>
+                      <th>Servis No</th>
+                      <th>Tarih</th>
+                      <th>Cihaz</th>
+                      <th>Müşteri</th>
+                      <th>Ücret</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="repair-done-tbody">
+                    <tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-muted)">Yükleniyor...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ TAMİR KAYIT SONRASI MODAL ═══ -->
+          <div id="repair-success-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:none;align-items:center;justify-content:center">
+            <div style="background:var(--bg-panel);border-radius:var(--radius-xl);padding:28px;min-width:340px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
+              <div style="text-align:center;margin-bottom:20px">
+                <span style="font-size:48px">✅</span>
+                <h3 style="margin:8px 0 4px;color:var(--color-success)">Kayıt Oluşturuldu!</h3>
+                <p style="color:var(--text-muted);font-size:13px" id="repair-success-no"></p>
+              </div>
+              <p style="text-align:center;font-weight:600;margin-bottom:14px">Ne yapmak istersiniz?</p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+                <button class="btn btn-primary" onclick="repairPrintThermal()">🖨️ Termal Fiş</button>
+                <button class="btn btn-primary" onclick="repairPrintA4()">📄 A4 Fiş</button>
+                <button class="btn" onclick="repairWhatsApp()">📱 WhatsApp</button>
+                <button class="btn" onclick="closeRepairModal()">✖ Kapat</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kasa artık Satış sayfasına entegre (satis-kasa sekmesi) -->
+
+          <!-- ──────── MÜŞTERİLER ──────── -->
+          <div class="page" id="page-musteriler">
+
+            <!-- Alt Sekmeler -->
+            <div class="toolbar">
+              <button class="btn btn-sm cust-sub active" data-custsub="liste" onclick="switchCustSub('liste')">
+                👥 Kişi Listesi
+              </button>
+              <button class="btn btn-sm cust-sub" data-custsub="ekle" onclick="switchCustSub('ekle')">
+                + Yeni Kişi Ekle
+              </button>
+              <button class="btn btn-sm cust-sub" data-custsub="detay" onclick="switchCustSub('detay')" id="cust-detail-tab" style="display:none">
+                📋 Kişi Detay
+              </button>
+              <div class="toolbar-separator"></div>
+              <div class="search-bar" style="width: 220px" id="cust-search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Ad, telefon ara..." id="cust-search" />
+              </div>
+              <select class="form-select" style="padding: 4px 28px 4px 8px; font-size: 12px" id="cust-type-filter">
+                <option value="">Tüm Tipler</option>
+                <option value="toptanci">Toptancı</option>
+                <option value="satici">Satıcı</option>
+                <option value="alici">Alıcı</option>
+                <option value="bayi">Bayi</option>
+                <option value="genel">Genel</option>
+              </select>
+            </div>
+
+            <!-- ═══ KİŞİ LİSTESİ ═══ -->
+            <div class="content-body cust-section active" id="cust-liste">
+              <div class="stock-table-wrapper">
+                <table class="data-table" id="cust-table">
+                  <thead>
+                    <tr>
+                      <th>Tip</th>
+                      <th>Adı Soyadı</th>
+                      <th>Telefon</th>
+                      <th>Adres</th>
+                      <th>Toplam Borç</th>
+                      <th>Tarih</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cust-tbody">
+                  </tbody>
+                </table>
+              </div>
+              <div class="empty-state" id="cust-empty">
+                <span class="empty-icon">👥</span>
+                <span class="empty-text">Kayıtlı Kişi Yok</span>
+                <span class="empty-desc">"Yeni Kişi Ekle" sekmesinden kişi ekleyin.</span>
+              </div>
+            </div>
+
+            <!-- ═══ YENİ KİŞİ EKLE ═══ -->
+            <div class="content-body cust-section" id="cust-ekle">
+              <form class="stock-form" id="cust-add-form" onsubmit="handleCustSave(event)">
+
+                <div class="form-section">
+                  <div class="form-section-title">👤 Kişi Bilgileri</div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Kişi Tipi</label>
+                        <select id="cust-type" required>
+                          <option value="genel">Genel</option>
+                          <option value="alici">Alıcı</option>
+                          <option value="satici">Satıcı</option>
+                          <option value="toptanci">Toptancı</option>
+                          <option value="bayi">Bayi</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Adı Soyadı</label>
+                        <input type="text" id="cust-name" placeholder="Ad Soyad" required />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Telefon Numarası</label>
+                        <input type="tel" id="cust-phone" placeholder="05XX XXX XX XX" required />
+                      </div>
+                      <div class="form-group">
+                        <label>Adres <span class="optional">(opsiyonel)</span></label>
+                        <input type="text" id="cust-address" placeholder="Adres" />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>IBAN <span class="optional">(opsiyonel)</span></label>
+                        <input type="text" id="cust-iban" placeholder="TR00 0000 0000 0000 0000 00" maxlength="34" />
+                      </div>
+                      <div class="form-group">
+                        <label>Fotoğraf <span class="optional">(opsiyonel - yerelde saklanır)</span></label>
+                        <div class="file-upload-area" onclick="document.getElementById('cust-photo').click()">
+                          <span class="upload-icon">📷</span>
+                          <div class="upload-text">
+                            <span id="cust-photo-name">Fotoğraf seç</span>
+                            <small>JPG, PNG - Maks 5MB</small>
+                          </div>
+                          <input type="file" id="cust-photo" accept="image/*" onchange="updateFileName(this, 'cust-photo-name')" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Not <span class="optional">(opsiyonel)</span></label>
+                        <textarea id="cust-notes" placeholder="Notlar..."></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary" id="btn-cust-save">💾 Kaydet</button>
+                  <button type="reset" class="btn">🗑️ Temizle</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- ═══ KİŞİ DETAY ═══ -->
+            <div class="content-body cust-section" id="cust-detay">
+
+              <!-- Kişi Bilgileri Özet -->
+              <div class="form-section" style="margin-bottom: 16px">
+                <div class="form-section-title" id="detail-name">👤 Kişi Bilgileri</div>
+                <div class="form-section-body" id="detail-info">
+                  <!-- JS ile doldurulacak -->
+                </div>
+              </div>
+
+              <!-- İşlem Sekmeleri -->
+              <div class="toolbar" style="margin-bottom: 0; border-radius: var(--radius-lg) var(--radius-lg) 0 0">
+                <button class="btn btn-sm detail-sub active" data-detailsub="islemler" onclick="switchDetailSub('islemler')">📋 İşlemler</button>
+                <button class="btn btn-sm detail-sub" data-detailsub="islem-ekle" onclick="switchDetailSub('islem-ekle')">+ İşlem Ekle</button>
+                <button class="btn btn-sm detail-sub" data-detailsub="borc" onclick="switchDetailSub('borc')">💳 Borç / Ödeme</button>
+                <div class="toolbar-separator"></div>
+                <button class="btn btn-sm" onclick="sendWhatsApp()">📱 WhatsApp</button>
+                <button class="btn btn-sm" onclick="exportPDF()">📄 PDF</button>
+                <button class="btn btn-sm" onclick="printPage()">🖨️ Yazdır</button>
+              </div>
+
+              <!-- İşlem Geçmişi -->
+              <div class="detail-section active" id="detail-islemler" style="border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 var(--radius-lg) var(--radius-lg); padding: 16px">
+                <div class="stock-table-wrapper">
+                  <table class="data-table" id="detail-transactions-table">
+                    <thead>
+                      <tr>
+                        <th><input type="checkbox" id="select-all-tx" /></th>
+                        <th>Tarih</th>
+                        <th>Tür</th>
+                        <th>Açıklama</th>
+                        <th>Tutar</th>
+                      </tr>
+                    </thead>
+                    <tbody id="detail-transactions-tbody">
+                    </tbody>
+                  </table>
+                </div>
+                <!-- Seçili işlemler için aksiyonlar -->
+                <div style="display: flex; gap: 8px; margin-top: 12px; align-items: center;">
+                  <span style="font-size: 12px; color: var(--text-muted)">Seçili işlemler:</span>
+                  <button class="btn btn-sm" onclick="sendSelectedWhatsApp()">📱 WhatsApp Gönder</button>
+                  <button class="btn btn-sm" onclick="printSelected()">🖨️ Yazdır</button>
+                </div>
+                <!-- Toplam Borç -->
+                <div style="margin-top: 16px; padding: 12px 16px; background: var(--bg-panel-alt); border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center">
+                  <span style="font-weight: 600; font-size: 14px">Toplam Borç</span>
+                  <span style="font-weight: 700; font-size: 18px; color: var(--color-danger)" id="detail-total-debt">0,00 ₺</span>
+                </div>
+              </div>
+
+              <!-- İşlem Ekle -->
+              <div class="detail-section" id="detail-islem-ekle" style="border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 var(--radius-lg) var(--radius-lg); padding: 16px">
+                <p style="color: var(--text-muted); font-size: 13px">İşlem ekleme — ileri aşamada aktif olacak</p>
+              </div>
+
+              <!-- Borç / Ödeme -->
+              <div class="detail-section" id="detail-borc" style="border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 var(--radius-lg) var(--radius-lg); padding: 16px">
+                <div class="form-row" style="max-width: 500px">
+                  <div class="form-group">
+                    <label>İşlem</label>
+                    <select id="debt-action">
+                      <option value="borc">Borç Ekle</option>
+                      <option value="odeme">Ödeme Al</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Tutar (₺)</label>
+                    <input type="number" id="debt-amount" placeholder="0.00" step="0.01" />
+                  </div>
+                  <div class="form-group">
+                    <label>Açıklama</label>
+                    <input type="text" id="debt-desc" placeholder="Açıklama" />
+                  </div>
+                </div>
+                <button class="btn btn-primary btn-sm" style="margin-top: 12px" onclick="handleDebtAction()">💾 Kaydet</button>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- ──────── RAPORLAR ──────── -->
+          <div class="page" id="page-raporlar">
+            <div class="toolbar">
+              <button class="btn btn-sm">📊 Satış Raporu</button>
+              <button class="btn btn-sm">📦 Stok Raporu</button>
+              <button class="btn btn-sm">💵 Kar/Zarar</button>
+              <button class="btn btn-sm">🔧 Tamir Raporu</button>
+              <div class="toolbar-separator"></div>
+              <button class="btn btn-sm">📥 Excel İndir</button>
+              <button class="btn btn-sm">🖨️ Yazdır</button>
+            </div>
+            <div class="content-body">
+              <div class="empty-state">
+                <span class="empty-icon">📈</span>
+                <span class="empty-text">Raporlar</span>
+                <span class="empty-desc"
+                  >Rapor türünü seçerek detaylı analiz
+                  görüntüleyebilirsiniz.</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- ──────── AYARLAR ──────── -->
+          <div class="page" id="page-ayarlar">
+            <div class="toolbar">
+              <button class="btn btn-sm">⚙️ Genel</button>
+              <button class="btn btn-sm">👤 Kullanıcılar</button>
+              <button class="btn btn-sm">🔑 Lisans</button>
+              <button class="btn btn-sm">💾 Yedekleme</button>
+            </div>
+            <div class="content-body">
+              <div class="empty-state">
+                <span class="empty-icon">⚙️</span>
+                <span class="empty-text">Ayarlar</span>
+                <span class="empty-desc"
+                  >Sistem, kullanıcı ve lisans ayarları burada
+                  yapılandırılacak.</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+       STATUS BAR
+       ═══════════════════════════════════ -->
+      <div class="statusbar">
+        <div class="status-item">
+          <span class="status-dot"></span>
+          <span>Bağlantı: Aktif</span>
+        </div>
+        <div class="status-item">
+          <span>🔑 Lisans: 365 gün</span>
+        </div>
+        <div class="status-item">
+          <span>👤 Admin</span>
+        </div>
+        <div class="statusbar-right">
+          <span id="status-clock">--:--</span>
+          <span>v1.0.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- JS (modüler) -->
+    <script src="js/auth.js"></script>
+    <script src="js/error.js"></script>
+    <script src="js/click.js"></script>
+    <script src="js/print-utils.js"></script>
+    <script src="js/stock-controller.js"></script>
+    <script src="js/customers-controller.js"></script>
+    <script src="js/purchases-controller.js"></script>
+    <script src="js/repairs-controller.js"></script>
+    <script src="js/sales-controller.js"></script>
+  </body>
+</html>

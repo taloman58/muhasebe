@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cihazlarım - GSM OFIS PRO</title>
+    <link rel="stylesheet" href="../styles/variables.css" />
+    <link rel="stylesheet" href="../styles/global.css" />
+    <link rel="stylesheet" href="../styles/layout.css" />
+    <link rel="stylesheet" href="../styles/components.css" />
+    <link rel="stylesheet" href="../styles/stock.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- TITLE BAR -->
+      <div class="titlebar">
+        <div class="titlebar-left">
+          <div class="titlebar-logo">G</div>
+          <span class="titlebar-title">GSM OFIS PRO</span>
+          <span class="titlebar-version">v1.0.0</span>
+        </div>
+        <div class="titlebar-right">
+          <button class="titlebar-btn" id="btn-minimize" title="Küçült">─</button>
+          <button class="titlebar-btn" id="btn-maximize" title="Ekranı Kapla">☐</button>
+          <button class="titlebar-btn close" id="btn-close" title="Kapat">✕</button>
+        </div>
+      </div>
+
+      <!-- MENU BAR (Shared) -->
+      <div class="menubar">
+        <script>
+          // Note: In a real app, these sections would be shared templates.
+        </script>
+        <button class="menu-item">Dosya</button>
+        <button class="menu-item">İşlemler</button>
+        <button class="menu-item">Raporlar</button>
+        <button class="menu-item">Araçlar</button>
+        <button class="menu-item">Ayarlar</button>
+        <button class="menu-item">Yardım</button>
+        <div class="menubar-right">
+          <div class="user-badge">
+            <div class="avatar">U</div>
+            <span>Yükleniyor...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN TABS -->
+      <div class="main-tabs" id="main-tabs">
+        <a href="dashboard.html" class="main-tab">
+          <span class="tab-icon">📊</span> Panel
+        </a>
+        <a href="devices.html" class="main-tab">
+          <span class="tab-icon">📱</span> Cihazlarım
+        </a>
+        <a href="inventory.html" class="main-tab">
+          <span class="tab-icon">📦</span> Stok İşlemleri
+        </a>
+        <a href="sales.html" class="main-tab">
+          <span class="tab-icon">💰</span> Satış & Kasa
+        </a>
+        <a href="repairs.html" class="main-tab">
+          <span class="tab-icon">🔧</span> Tamir & Servis
+        </a>
+        <a href="customers.html" class="main-tab">
+          <span class="tab-icon">👥</span> Müşteriler & CRM
+        </a>
+        <a href="reports.html" class="main-tab">
+          <span class="tab-icon">📈</span> Raporlar
+        </a>
+        <a href="settings.html" class="main-tab">
+          <span class="tab-icon">⚙️</span> Ayarlar
+        </a>
+      </div>
+
+      <!-- TICKER BAR -->
+      <div class="ticker-bar" id="ticker-bar">
+        <span class="ticker-label">● CANLI</span>
+        <div class="ticker-track-wrapper">
+          <div class="ticker-track" id="ticker-track">
+            <span class="ticker-item">⟳ Veriler yükleniyor...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTENT AREA -->
+      <div class="content-wrapper">
+        <div class="panel-left">
+          <div class="panel-left-header">ÖZET BİLGİLER</div>
+          <div class="panel-left-content" id="panel-left-content"></div>
+        </div>
+
+        <div class="content-main" id="pages">
+          <div class="page active" id="page-stok">
+            <div class="toolbar">
+              <button class="btn btn-sm stock-sub active" data-stocksub="liste" onclick="switchStockSub('liste')">
+                📋 Cihaz Listesi
+              </button>
+              <button class="btn btn-sm stock-sub" data-stocksub="ekle" onclick="switchStockSub('ekle')">
+                + Yeni Ekle
+              </button>
+              <div class="toolbar-separator"></div>
+              <div class="search-bar" style="width: 220px" id="stock-search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="IMEI, marka, model ara..." id="stock-search" />
+              </div>
+              <select class="form-select" style="padding: 4px 28px 4px 8px; font-size: 12px" id="stock-filter">
+                <option value="">Tüm Durumlar</option>
+                <option value="stokta">Stokta</option>
+                <option value="satildi">Satıldı</option>
+                <option value="tamirde">Tamirde</option>
+                <option value="rezerve">Rezerve</option>
+              </select>
+            </div>
+
+            <div class="content-body stock-section active" id="stock-liste">
+              <div class="stock-table-wrapper">
+                <table class="data-table" id="stock-table">
+                  <thead>
+                    <tr>
+                      <th>Tür</th>
+                      <th>Marka</th>
+                      <th>Model</th>
+                      <th>Hafıza</th>
+                      <th>IMEI</th>
+                      <th>Kozmetik</th>
+                      <th>Alış ₺</th>
+                      <th>Satış ₺</th>
+                      <th>Durum</th>
+                      <th>Tarih</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stock-tbody"></tbody>
+                </table>
+              </div>
+              <div class="empty-state" id="stock-empty">
+                <span class="empty-icon">📦</span>
+                <span class="empty-text">Cihaz Listesi Boş</span>
+                <span class="empty-desc">Henüz kayıtlı cihaz yok. "Yeni Ekle" sekmesinden cihaz ekleyebilirsiniz.</span>
+              </div>
+            </div>
+
+            <div class="content-body stock-section" id="stock-ekle" style="padding: 24px;">
+              <form class="stock-form" id="stock-add-form" onsubmit="handleStockSave(event)" style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
+                <div class="form-section" style="background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);">
+                  <div class="form-section-title" style="font-size: 16px; margin-bottom: 16px; border-bottom: 2px solid var(--bg-app); padding-bottom: 10px; color: var(--color-accent); font-weight: 600;">📱 Temel Cihaz Bilgileri</div>
+                  <div class="form-section-body" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <div class="form-group">
+                      <label>Tür (Zorunlu)</label>
+                      <select id="add-type" required style="padding: 10px; border-radius: var(--radius-md);">
+                        <option value="telefon">📱 Telefon</option>
+                        <option value="tablet">📱 Tablet</option>
+                        <option value="bilgisayar">🖥️ Bilgisayar</option>
+                        <option value="laptop">💻 Laptop</option>
+                        <option value="diger">📦 Diğer</option>
+                      </select>
+                    </div>
+                    <div class="form-group" style="position: relative;">
+                      <label>Marka (Zorunlu)</label>
+                      <input type="text" id="add-brand" placeholder="Örn: Apple, Samsung" autocomplete="off" required style="padding: 10px; border-radius: var(--radius-md);" />
+                    </div>
+                    <div class="form-group" style="position: relative;">
+                      <label>Model (Zorunlu)</label>
+                      <input type="text" id="add-model" placeholder="Örn: iPhone 13" autocomplete="off" required style="padding: 10px; border-radius: var(--radius-md);" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-section" style="background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);">
+                  <div class="form-section-title" style="font-size: 16px; margin-bottom: 16px; border-bottom: 2px solid var(--bg-app); padding-bottom: 10px; color: var(--color-accent); font-weight: 600;">⚙️ Teknik & Kozmetik</div>
+                  <div class="form-section-body" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <div class="form-group">
+                      <label>Kapasite / RAM</label>
+                      <div style="display: flex; gap: 8px;">
+                        <input type="text" id="add-storage" placeholder="128 GB" style="flex:1; padding: 10px; border-radius: var(--radius-md);" />
+                        <input type="text" id="add-ram" placeholder="4 GB" style="flex:1; padding: 10px; border-radius: var(--radius-md);" />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Renk / Ekran</label>
+                      <div style="display: flex; gap: 8px;">
+                        <input type="text" id="add-color" placeholder="Siyah" style="flex:1; padding: 10px; border-radius: var(--radius-md);" />
+                        <input type="text" id="add-screen" placeholder="6.1\"" style="flex:1; padding: 10px; border-radius: var(--radius-md);" />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Kozmetik Durum</label>
+                      <select id="add-cosmetic" style="padding: 10px; border-radius: var(--radius-md);">
+                        <option value="">--Seçiniz--</option>
+                        <option value="Sıfır">✨ Sıfır (Kapalı Kutu)</option>
+                        <option value="10/10">10/10 (Hatasız)</option>
+                        <option value="9/10">9/10 (Çok Temiz)</option>
+                        <option value="8/10">8/10 (Kılcal Çizikli)</option>
+                        <option value="Kötü">Kötü (Vuruk/Darbekar)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-section" style="background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);">
+                  <div class="form-section-title" style="font-size: 16px; margin-bottom: 16px; border-bottom: 2px solid var(--bg-app); padding-bottom: 10px; color: var(--color-accent); font-weight: 600;">🆔 Güvenlik & Finans</div>
+                  <div class="form-section-body" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                      <div class="form-group">
+                        <label>IMEI / Seri No 1</label>
+                        <input type="text" id="add-imei" placeholder="15 haneli IMEI" maxlength="15" style="padding: 10px; border-radius: var(--radius-md);" />
+                      </div>
+                      <div class="form-group">
+                        <label>IMEI 2 (Varsa)</label>
+                        <input type="text" id="add-imei2" placeholder="15 haneli IMEI" maxlength="15" style="padding: 10px; border-radius: var(--radius-md);" />
+                      </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                      <div class="form-group" style="position:relative">
+                        <label>Alınan Kişi/Firma</label>
+                        <input type="text" id="add-seller-name" placeholder="Müşteri/Tedarikçi Adı" autocomplete="off" style="padding: 10px; border-radius: var(--radius-md);" />
+                      </div>
+                      <div class="form-group" style="position:relative">
+                        <label>Telefonu</label>
+                        <input type="tel" id="add-seller-phone" placeholder="0555 X" autocomplete="off" style="padding: 10px; border-radius: var(--radius-md);" />
+                      </div>
+                      <div class="form-group">
+                        <label>Maliyet & Fiyat (Zorunlu) ₺</label>
+                        <div style="display: flex; gap: 8px;">
+                          <input type="number" id="add-purchase-price" placeholder="Maliyet ₺" required step="0.01" style="flex:1; padding: 10px; border-radius: var(--radius-md);" />
+                          <input type="number" id="add-sale-price" placeholder="Satış Fiyatı ₺" step="0.01" style="flex:1; padding: 10px; border-radius: var(--radius-md);" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-section" style="background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);">
+                  <div class="form-section-title" style="font-size: 16px; margin-bottom: 16px; border-bottom: 2px solid var(--bg-app); padding-bottom: 10px; color: var(--color-accent); font-weight: 600;">📝 Ekstralar</div>
+                  <div class="form-section-body" style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+                    <div class="form-group">
+                      <label>Kusurlar / Değişen Parçalar</label>
+                      <input type="text" id="add-issues" placeholder="Örn: Pil değişmiş, FaceID arızalı..." style="padding: 10px; border-radius: var(--radius-md);" />
+                    </div>
+                    <div class="form-group">
+                      <label>Yanında Verilenler</label>
+                      <input type="text" id="add-accessories" placeholder="Kutu, Şarj Aleti, Kılıf..." style="padding: 10px; border-radius: var(--radius-md);" />
+                    </div>
+                    <div class="form-group">
+                      <label>Özel Notlar</label>
+                      <textarea id="add-notes" rows="2" placeholder="Cihaz hakkında gizli tutulacak veya bilinmesi gereken notlar" style="padding: 10px; border-radius: var(--radius-md);"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-actions" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px;">
+                  <button type="reset" class="btn btn-lg" onclick="document.getElementById('stock-add-form').reset()" style="background: #f1f5f9;">🧹 Formu Temizle</button>
+                  <button type="submit" class="btn btn-primary btn-lg" id="btn-stock-save" style="padding: 10px 30px; font-weight: 600;">💾 Cihazı Kaydet</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATUS BAR -->
+      <div class="statusbar">
+        <div class="status-item">
+          <span class="status-dot"></span>
+          <span>Bağlantı: Aktif</span>
+        </div>
+        <div class="status-item">
+          <span id="license-display">🔑 Lisans: Hesaplanıyor...</span>
+        </div>
+        <div class="status-item">
+          <span class="status-role">👤 Yükleniyor...</span>
+        </div>
+        <div class="statusbar-right">
+          <span id="status-clock">--:--</span>
+          <span>v1.0.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/error.js"></script>
+    <script src="../js/click.js"></script>
+    <script src="../js/print-utils.js"></script>
+    <script src="../js/stock-controller.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        if (typeof initSupabase === 'function') initSupabase();
+        if (typeof updateLeftPanel === 'function') updateLeftPanel('stok');
+      });
+    </script>
+  </body>
+</html>

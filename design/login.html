@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GSM OFIS PRO - Giriş</title>
+  <link rel="stylesheet" href="styles/variables.css">
+  <link rel="stylesheet" href="styles/global.css">
+  <link rel="stylesheet" href="styles/login.css">
+</head>
+<body>
+
+<!-- İnternet durum çubuğu -->
+<div class="internet-status" id="internet-status">
+  ⚠️ İnternet bağlantısı bulunamadı. Program çalışmak için internet gerektirir.
+</div>
+
+<div class="login-wrapper">
+  <div class="login-container">
+
+    <!-- ═══ Logo / Başlık ═══ -->
+    <div class="login-header">
+      <div class="login-logo">G</div>
+      <h1>GSM OFIS PRO</h1>
+      <p>2. El Telefon Yönetim Sistemi</p>
+    </div>
+
+    <!-- ═══ Sekme Geçişleri ═══ -->
+    <div class="auth-tabs" id="auth-tabs">
+      <button class="auth-tab active" data-form="login">Giriş Yap</button>
+      <button class="auth-tab" data-form="register">Üye Ol</button>
+    </div>
+
+    <div class="login-body">
+
+      <!-- Mesaj alanı -->
+      <div class="auth-message" id="auth-message"></div>
+
+      <!-- ═══════════════════════════
+           GİRİŞ FORMU
+           ═══════════════════════════ -->
+      <form class="auth-form active" id="form-login" onsubmit="handleLogin(event)">
+
+        <div class="login-field">
+          <label>E-Posta / Kullanıcı Adı</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="login-email" placeholder="E-posta adresinizi girin" required autocomplete="email">
+          </div>
+        </div>
+
+        <div class="login-field">
+          <label>Şifre</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="login-password" placeholder="Şifrenizi girin" required autocomplete="current-password">
+            <span class="toggle-password" onclick="togglePassword('login-password', this)">👁️</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login" id="btn-login">
+          <span class="btn-text">Giriş Yap</span>
+          <span class="spinner"></span>
+        </button>
+
+        <div class="forgot-link">
+          <a href="#" onclick="showForm('forgot'); return false;">Şifremi Unuttum</a>
+        </div>
+      </form>
+
+      <!-- ═══════════════════════════
+           KAYIT FORMU
+           ═══════════════════════════ -->
+      <form class="auth-form" id="form-register" onsubmit="handleRegister(event)">
+
+        <div class="login-field">
+          <label>Kullanıcı Adı</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" id="reg-username" placeholder="Kullanıcı adınız" required minlength="3" maxlength="50">
+          </div>
+        </div>
+
+        <div class="login-field">
+          <label>E-Posta</label>
+          <div class="input-wrap">
+            <span class="input-icon">📧</span>
+            <input type="email" id="reg-email" placeholder="E-posta adresiniz" required autocomplete="email">
+          </div>
+        </div>
+
+        <div class="login-field">
+          <label>Telefon</label>
+          <div class="input-wrap">
+            <span class="input-icon">📱</span>
+            <input type="tel" id="reg-phone" placeholder="05XX XXX XX XX" required>
+          </div>
+        </div>
+
+        <div class="login-field">
+          <label>Şifre</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="reg-password" placeholder="En az 6 karakter" required minlength="6" autocomplete="new-password">
+            <span class="toggle-password" onclick="togglePassword('reg-password', this)">👁️</span>
+          </div>
+        </div>
+
+        <div class="login-field">
+          <label>Lisans Anahtarı</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔑</span>
+            <input type="text" id="reg-license" placeholder="XXXX-XXXX-XXXX-XXXX" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login" id="btn-register">
+          <span class="btn-text">Kayıt Ol</span>
+          <span class="spinner"></span>
+        </button>
+
+        <div class="license-note">
+          Lisans anahtarını yöneticinizden temin edebilirsiniz.
+        </div>
+      </form>
+
+      <!-- ═══════════════════════════
+           ŞİFREMİ UNUTTUM FORMU
+           ═══════════════════════════ -->
+      <form class="auth-form" id="form-forgot" onsubmit="handleForgot(event)">
+
+        <div class="login-field">
+          <label>E-Posta Adresi</label>
+          <div class="input-wrap">
+            <span class="input-icon">📧</span>
+            <input type="email" id="forgot-email" placeholder="Kayıtlı e-posta adresiniz" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login" id="btn-forgot">
+          <span class="btn-text">Şifre Sıfırlama Gönder</span>
+          <span class="spinner"></span>
+        </button>
+
+        <div class="back-link">
+          <a href="#" onclick="showForm('login'); return false;">← Giriş ekranına dön</a>
+        </div>
+      </form>
+
+    </div>
+
+    <!-- ═══ Footer ═══ -->
+    <div class="login-footer">
+      GSM OFIS PRO v1.0.0 &nbsp;•&nbsp; © 2025 Tüm Hakları Saklıdır
+    </div>
+
+  </div>
+</div>
+
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- Auth fonksiyonları -->
+<script src="js/auth.js"></script>
+<!-- Global hata & telefon formatı -->
+<script src="js/error.js"></script>
+<!-- Login sayfa kontrolü -->
+<script src="js/login-controller.js"></script>
+
+</body>
+</html>

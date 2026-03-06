@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tamir & Servis - GSM OFIS PRO</title>
+    <link rel="stylesheet" href="../styles/variables.css" />
+    <link rel="stylesheet" href="../styles/global.css" />
+    <link rel="stylesheet" href="../styles/layout.css" />
+    <link rel="stylesheet" href="../styles/components.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- TITLE BAR (Shared) -->
+      <div class="titlebar">
+        <div class="titlebar-left">
+          <div class="titlebar-logo">G</div>
+          <span class="titlebar-title">GSM OFIS PRO</span>
+          <span class="titlebar-version">v1.0.0</span>
+        </div>
+        <div class="titlebar-right">
+          <button class="titlebar-btn" id="btn-minimize" title="Küçült">─</button>
+          <button class="titlebar-btn" id="btn-maximize" title="Ekranı Kapla">☐</button>
+          <button class="titlebar-btn close" id="btn-close" title="Kapat">✕</button>
+        </div>
+      </div>
+
+      <!-- MENU BAR -->
+      <div class="menubar">
+        <button class="menu-item">Dosya</button>
+        <button class="menu-item">İşlemler</button>
+        <button class="menu-item">Raporlar</button>
+        <button class="menu-item">Araçlar</button>
+        <button class="menu-item">Ayarlar</button>
+        <button class="menu-item">Yardım</button>
+        <div class="menubar-right">
+          <div class="user-badge">
+            <div class="avatar">U</div>
+            <span>Yükleniyor...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN TABS -->
+      <div class="main-tabs" id="main-tabs">
+        <a href="dashboard.html" class="main-tab">
+          <span class="tab-icon">📊</span> Panel
+        </a>
+        <a href="devices.html" class="main-tab">
+          <span class="tab-icon">📱</span> Cihazlarım
+        </a>
+        <a href="inventory.html" class="main-tab">
+          <span class="tab-icon">📦</span> Stok İşlemleri
+        </a>
+        <a href="sales.html" class="main-tab">
+          <span class="tab-icon">💰</span> Satış & Kasa
+        </a>
+        <a href="repairs.html" class="main-tab">
+          <span class="tab-icon">🔧</span> Tamir & Servis
+        </a>
+        <a href="customers.html" class="main-tab">
+          <span class="tab-icon">👥</span> Müşteriler & CRM
+        </a>
+        <a href="reports.html" class="main-tab">
+          <span class="tab-icon">📈</span> Raporlar
+        </a>
+        <a href="settings.html" class="main-tab">
+          <span class="tab-icon">⚙️</span> Ayarlar
+        </a>
+      </div>
+
+      <!-- CONTENT AREA -->
+      <div class="content-wrapper">
+        <div class="content-main" id="pages">
+          <div class="page active" id="page-tamir">
+            <div class="toolbar">
+              <button class="btn btn-sm tamir-sub" data-tamirsub="ekle" onclick="switchTamirSub('ekle')">+ Yeni Servis</button>
+              <button class="btn btn-sm tamir-sub active btn-primary" data-tamirsub="acik" onclick="switchTamirSub('acik')">🔧 Açık Servisler</button>
+              <button class="btn btn-sm tamir-sub" data-tamirsub="tamamlanan" onclick="switchTamirSub('tamamlanan')">✅ Tamamlananlar</button>
+              <div class="toolbar-separator"></div>
+              <div class="search-bar" style="width:220px" id="tamir-search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="tamir-search" placeholder="Servis no, müşteri, cihaz ara..." />
+              </div>
+            </div>
+
+            <!-- NEW SERVICE FORM -->
+            <div class="content-body tamir-section" id="tamir-ekle" style="padding: 24px;">
+              <form class="stock-form" id="repair-add-form" onsubmit="handleRepairSave(event)" style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px;">
+                
+                <!-- Service & General Info -->
+                <div class="form-section" style="background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);">
+                  <div class="form-section-title" style="font-size: 16px; margin-bottom: 16px; border-bottom: 2px solid var(--bg-app); padding-bottom: 10px; color: var(--color-accent); font-weight: 600;">🔧 Servis Kayıt Bilgileri</div>
+                  <div class="form-section-body" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <div class="form-group">
+                      <label>Servis No (Otomatik)</label>
+                      <div style="display:flex;gap:8px;align-items:center">
+                        <input type="text" id="repair-service-no" readonly style="flex:1; background: var(--bg-app); font-family:var(--font-mono); font-weight:700; color:var(--color-accent); padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color);" />
+                        <button type="button" class="btn btn-sm" onclick="copyServiceNo()" title="Kopyala" style="padding: 10px;">📋</button>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label>Kabul Tarihi</label>
+                      <input type="datetime-local" id="repair-date" style="padding: 10px; border-radius: var(--radius-md);" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Customer Info -->
+                <div class="form-section" style="background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);">
+                  <div class="form-section-title" style="font-size: 16px; margin-bottom: 16px; border-bottom: 2px solid var(--bg-app); padding-bottom: 10px; color: var(--color-accent); font-weight: 600;">👤 Müşteri Bilgileri</div>
+                  <div class="form-section-body" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <div class="form-group" style="position:relative">
+                      <label>Ad Soyad</label>
+                      <input type="text" id="repair-cust-name" placeholder="Müşteri adı" autocomplete="off" style="padding: 10px; border-radius: var(--radius-md);" />
+                    </div>
+                    <div class="form-group" style="position:relative">
+                      <label>Telefon Numarası</label>
+                      <input type="tel" id="repair-cust-phone" placeholder="0555 555 55 55" autocomplete="off" style="padding: 10px; border-radius: var(--radius-md);" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Device Info -->
+                <div class="form-section" style="background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);">
+                  <div class="form-section-title" style="font-size: 16px; margin-bottom: 16px; border-bottom: 2px solid var(--bg-app); padding-bottom: 10px; color: var(--color-accent); font-weight: 600;">📱 Teslim Alınan Cihaz</div>
+                  <div class="form-section-body" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <div class="form-group" style="position:relative">
+                      <label>Marka (Zorunlu)</label>
+                      <input type="text" id="repair-brand" placeholder="Örn: Apple, Samsung" required autocomplete="off" style="padding: 10px; border-radius: var(--radius-md);" />
+                    </div>
+                    <div class="form-group" style="position:relative">
+                      <label>Model (Zorunlu)</label>
+                      <input type="text" id="repair-model" placeholder="Örn: iPhone 14, S23" required autocomplete="off" style="padding: 10px; border-radius: var(--radius-md);" />
+                    </div>
+                    <div class="form-group">
+                      <label>IMEI (İsteğe Bağlı)</label>
+                      <input type="text" id="repair-imei" placeholder="15 haneli IMEI" maxlength="17" style="padding: 10px; border-radius: var(--radius-md);" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Fault Info -->
+                <div class="form-section" style="background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm);">
+                  <div class="form-section-title" style="font-size: 16px; margin-bottom: 16px; border-bottom: 2px solid var(--bg-app); padding-bottom: 10px; color: var(--color-accent); font-weight: 600;">⚠️ Arıza Bildirimi ve Ekstralar</div>
+                  <div class="form-section-body">
+                    <div class="form-group">
+                      <label>Arıza Açıklaması (Zorunlu)</label>
+                      <textarea id="repair-fault" rows="3" placeholder="Müşterinin belirttiği arıza veya talepleri eksiksiz yazın..." required style="padding: 10px; border-radius: var(--radius-md); font-family: inherit; resize: vertical;"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Submit Area -->
+                <div class="form-actions" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px;">
+                  <button type="button" class="btn btn-lg" onclick="resetRepairForm()" style="background: #f1f5f9;">🗑️ Temizle</button>
+                  <button type="submit" class="btn btn-primary btn-lg" id="btn-repair-save" style="padding: 10px 30px; font-weight: 600;">💾 Servis Kaydı Oluştur</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- OPEN SERVICES -->
+            <div class="content-body tamir-section active" id="tamir-acik">
+              <div class="stock-table-wrapper">
+                <table class="data-table" id="repair-open-table">
+                  <thead>
+                    <tr>
+                      <th>Servis No</th>
+                      <th>Tarih</th>
+                      <th>Cihaz</th>
+                      <th>Arıza</th>
+                      <th>Müşteri</th>
+                      <th>Durum</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="repair-open-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- COMPLETED SERVICES -->
+            <div class="content-body tamir-section" id="tamir-tamamlanan">
+              <div class="stock-table-wrapper">
+                <table class="data-table" id="repair-done-table">
+                  <thead>
+                    <tr>
+                      <th>Servis No</th>
+                      <th>Tarih</th>
+                      <th>Cihaz</th>
+                      <th>Müşteri</th>
+                      <th>Tutar</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="repair-done-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATUS BAR -->
+      <div class="statusbar">
+        <div class="status-item">
+          <span class="status-dot"></span>
+          <span>Bağlantı: Aktif</span>
+        </div>
+        <div class="status-item">
+          <span id="license-display">🔑 Lisans: Hesaplanıyor...</span>
+        </div>
+        <div class="status-item">
+          <span class="status-role">👤 Yükleniyor...</span>
+        </div>
+        <div class="statusbar-right">
+          <span id="status-clock">--:--</span>
+          <span>v1.0.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/error.js"></script>
+    <script src="../js/click.js"></script>
+    <script src="../js/print-utils.js"></script>
+    <script src="../js/repairs-controller.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        if (typeof initSupabase === 'function') initSupabase();
+        if (typeof initRepairPage === 'function') initRepairPage();
+        if (typeof updateLeftPanel === 'function') updateLeftPanel('tamir');
+      });
+    </script>
+  </body>
+</html>

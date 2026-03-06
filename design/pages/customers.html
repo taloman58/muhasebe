@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Müşteriler - GSM OFIS PRO</title>
+    <link rel="stylesheet" href="../styles/variables.css" />
+    <link rel="stylesheet" href="../styles/global.css" />
+    <link rel="stylesheet" href="../styles/layout.css" />
+    <link rel="stylesheet" href="../styles/components.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- TITLE BAR (Shared) -->
+      <div class="titlebar">
+        <div class="titlebar-left">
+          <div class="titlebar-logo">G</div>
+          <span class="titlebar-title">GSM OFIS PRO</span>
+          <span class="titlebar-version">v1.0.0</span>
+        </div>
+        <div class="titlebar-right">
+          <button class="titlebar-btn" id="btn-minimize" title="Küçült">─</button>
+          <button class="titlebar-btn" id="btn-maximize" title="Ekranı Kapla">☐</button>
+          <button class="titlebar-btn close" id="btn-close" title="Kapat">✕</button>
+        </div>
+      </div>
+
+      <!-- MENU BAR -->
+      <div class="menubar">
+        <button class="menu-item">Dosya</button>
+        <button class="menu-item">İşlemler</button>
+        <button class="menu-item">Raporlar</button>
+        <button class="menu-item">Araçlar</button>
+        <button class="menu-item">Ayarlar</button>
+        <button class="menu-item">Yardım</button>
+        <div class="menubar-right">
+          <div class="user-badge">
+            <div class="avatar">U</div>
+            <span>Yükleniyor...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN TABS -->
+      <div class="main-tabs" id="main-tabs">
+        <a href="dashboard.html" class="main-tab">
+          <span class="tab-icon">📊</span> Panel
+        </a>
+        <a href="devices.html" class="main-tab">
+          <span class="tab-icon">📱</span> Cihazlarım
+        </a>
+        <a href="inventory.html" class="main-tab">
+          <span class="tab-icon">📦</span> Stok İşlemleri
+        </a>
+        <a href="sales.html" class="main-tab">
+          <span class="tab-icon">💰</span> Satış & Kasa
+        </a>
+        <a href="repairs.html" class="main-tab">
+          <span class="tab-icon">🔧</span> Tamir & Servis
+        </a>
+        <a href="customers.html" class="main-tab">
+          <span class="tab-icon">👥</span> Müşteriler & CRM
+        </a>
+        <a href="reports.html" class="main-tab">
+          <span class="tab-icon">📈</span> Raporlar
+        </a>
+        <a href="settings.html" class="main-tab">
+          <span class="tab-icon">⚙️</span> Ayarlar
+        </a>
+      </div>
+
+      <!-- CONTENT AREA -->
+      <div class="content-wrapper">
+        <div class="content-main" id="pages">
+          <div class="page active" id="page-musteriler">
+            <div class="toolbar">
+              <button class="btn btn-sm cust-sub active" data-custsub="liste" onclick="switchCustSub('liste')">👥 Kişi Listesi</button>
+              <button class="btn btn-sm cust-sub" data-custsub="ekle" onclick="switchCustSub('ekle')">+ Yeni Kişi Ekle</button>
+              <div class="toolbar-separator"></div>
+              <div class="search-bar" style="width: 220px" id="cust-search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="İsim, telefon ara..." id="cust-search" />
+              </div>
+              <select class="form-select" id="cust-type-filter">
+                <option value="">Tüm Türler</option>
+                <option value="toptanci">Toptancı</option>
+                <option value="satici">Satıcı</option>
+                <option value="alici">Alıcı</option>
+                <option value="bayi">Bayi</option>
+                <option value="genel">Genel</option>
+              </select>
+            </div>
+
+            <!-- CONTACT LIST -->
+            <div class="content-body cust-section active" id="cust-liste">
+              <div class="stock-table-wrapper">
+                <table class="data-table" id="cust-table">
+                  <thead>
+                    <tr>
+                      <th>Tür</th>
+                      <th>Ad Soyad</th>
+                      <th>Telefon</th>
+                      <th>Adres</th>
+                      <th>Toplam Borç</th>
+                      <th>Tarih</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cust-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- ADD NEW CONTACT -->
+            <div class="content-body cust-section" id="cust-ekle">
+              <form class="stock-form" id="cust-add-form" onsubmit="handleCustSave(event)">
+                <div class="form-section">
+                  <div class="form-section-title">👤 Kişi Bilgileri</div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Tür (Zorunlu)</label>
+                        <select id="cust-type" required>
+                          <option value="toptanci">Toptancı (Mal Alınan)</option>
+                          <option value="satici">Satıcı (Bireysel Cihaz Satan)</option>
+                          <option value="alici">Alıcı (Servis/Perakende Müşteri)</option>
+                          <option value="bayi">Bayi (Sürekli Çalışılan)</option>
+                          <option value="genel" selected>Genel / Diğer</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Adı Soyadı / Firma Adı (Zorunlu)</label>
+                        <input type="text" id="cust-name" placeholder="Örn: Ahmet Yılmaz" required />
+                      </div>
+                      <div class="form-group">
+                        <label>Telefon Numarası (Zorunlu)</label>
+                        <input type="tel" id="cust-phone" placeholder="Örn: 0555 123 4567" required />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group" style="flex: 2">
+                        <label>Açık Adres (İsteğe Bağlı)</label>
+                        <input type="text" id="cust-address" placeholder="Müşteri açık adresi veya mağaza adresi..." />
+                      </div>
+                      <div class="form-group" style="flex: 1">
+                        <label>IBAN No (İsteğe Bağlı)</label>
+                        <input type="text" id="cust-iban" placeholder="TR..." maxlength="32" />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Özel Notlar</label>
+                        <textarea id="cust-notes" rows="2" placeholder="Gelecek durumlar için özel not..."></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Submit -->
+                <div class="form-actions" style="margin-top:20px; text-align:right;">
+                  <button type="button" class="btn" onclick="document.getElementById('cust-add-form').reset()">🧹 Temizle</button>
+                  <button type="submit" class="btn btn-primary" id="btn-cust-save">💾 Kaydet</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATUS BAR -->
+      <div class="statusbar">
+        <div class="status-item">
+          <span class="status-dot"></span>
+          <span>Bağlantı: Aktif</span>
+        </div>
+        <div class="status-item">
+          <span id="license-display">🔑 Lisans: Hesaplanıyor...</span>
+        </div>
+        <div class="status-item">
+          <span class="status-role">👤 Yükleniyor...</span>
+        </div>
+        <div class="statusbar-right">
+          <span id="status-clock">--:--</span>
+          <span>v1.0.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/error.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/click.js"></script>
+    <script src="../js/customers-controller.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        if (typeof initSupabase === 'function') initSupabase();
+        if (typeof loadCustomerList === 'function') loadCustomerList();
+        if (typeof updateLeftPanel === 'function') updateLeftPanel('musteriler');
+      });
+    </script>
+  </body>
+</html>

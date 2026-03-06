@@ -1,0 +1,389 @@
+/* ============================================
+   GSM OFIS PRO - Stok Sayfası Stilleri
+   ============================================ */
+
+/* ── Stok / Ortak Alt Sekmeler ── */
+.stock-section, .cust-section, .detail-section, .purch-section, .tamir-section {
+  display: none;
+}
+
+.stock-section.active, .cust-section.active, .detail-section.active, .purch-section.active, .tamir-section.active {
+  display: block;
+}
+
+.stock-sub.active, .cust-sub.active, .detail-sub.active, .purch-sub.active, .tamir-sub.active {
+  background: var(--color-accent) !important;
+  color: white !important;
+}
+
+/* ── Desen Çizici ── */
+.pattern-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+#pattern-canvas {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  cursor: crosshair;
+  touch-action: none;
+  display: block;
+}
+
+.pattern-clear-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+/* ── Aksesuar Checkboxlar ── */
+.accessories-check-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.check-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.check-label:hover { background: rgba(37,99,235,0.07); }
+.check-label input[type="checkbox"] { accent-color: var(--color-accent); width: 15px; height: 15px; }
+
+/* ── Tamir listesi durum badge ── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 700;
+}
+.status-badge.bekliyor  { background: rgba(245,158,11,0.12); color: #d97706; }
+.status-badge.tamirde   { background: rgba(37,99,235,0.10);  color: var(--color-accent); }
+.status-badge.tamamlandi{ background: rgba(16,185,129,0.12); color: var(--color-success); }
+.status-badge.teslim    { background: rgba(100,116,139,0.12);color: #64748b; }
+
+/* ── Autocomplete Dropdown ── */
+.autocomplete-dropdown {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  min-width: 100%;
+  width: max-content;
+  max-width: 520px;          /* Daha geniş */
+  background: var(--bg-panel);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  max-height: 280px;         /* Daha uzun */
+  overflow-y: auto;
+  z-index: 99999;            /* En üstte */
+  box-shadow: 0 12px 32px rgba(0,0,0,0.28);
+}
+
+.autocomplete-item {
+  padding: 10px 16px;
+  font-size: 13px;           /* Daha okunur */
+  line-height: 1.4;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.autocomplete-item:last-child { border-bottom: none; }
+
+.autocomplete-item:hover {
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--color-accent);
+  padding-left: 20px;        /* Hover'da hafif kayma efekti */
+}
+
+/* ── Yeni Ekle Form ── */
+.stock-form {
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 30px;
+}
+
+.form-section {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: visible; /* dropdown'ların taşabilmesi için */
+}
+
+.form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-heading);
+  background: var(--bg-panel-alt);
+  border-bottom: 1px solid var(--border-color);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0; /* Üst köşeler yuvarlak */
+}
+
+.form-section-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  /* overflow:visible — dropdown taşabilsin */
+  overflow: visible;
+}
+
+.form-row .form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;        /* Dropdown buradan konumlanır */
+  overflow: visible;
+}
+
+.form-row .form-group.small {
+  flex: 0.6;
+}
+
+.form-group label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.form-group label .optional {
+  font-weight: 400;
+  color: var(--text-muted);
+  text-transform: none;
+  font-size: 10px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 8px 10px;
+  font-size: var(--font-size-base);
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  transition: border-color var(--transition-fast);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+  outline: none;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+
+/* ── Dosya Yükleme ── */
+.file-upload-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.file-upload-area:hover {
+  border-color: var(--color-accent);
+  background: rgba(37, 99, 235, 0.03);
+}
+
+.file-upload-area .upload-icon {
+  font-size: 20px;
+  color: var(--text-muted);
+}
+
+.file-upload-area .upload-text {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.file-upload-area .upload-text small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.file-upload-area input[type="file"] {
+  display: none;
+}
+
+/* ── Kayıt Tarihi Otomatik ── */
+.auto-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--bg-panel-alt);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.auto-date .date-value {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ── Form Actions ── */
+.form-actions {
+  display: flex;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.form-actions .btn {
+  padding: 10px 24px;
+  font-size: var(--font-size-md);
+}
+
+/* ── Stok Liste Tablosu ── */
+.stock-table-wrapper {
+  flex: 1;
+  overflow: auto;
+}
+
+.stock-table-wrapper table tbody td {
+  font-size: var(--font-size-sm);
+}
+
+.device-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--color-accent);
+}
+
+.price-cell {
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.price-cell.purchase { color: var(--color-danger); }
+.price-cell.sale { color: var(--color-success); }
+
+/* ── Save animation ── */
+@keyframes saveSuccess {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.btn-save-success {
+  animation: saveSuccess 0.3s ease;
+  background: var(--color-success) !important;
+  border-color: var(--color-success) !important;
+}
+
+/* ── Field Errors ── */
+.field-error {
+  font-size: 11px;
+  color: #ef4444;
+  margin-top: 3px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  animation: errorShake 0.3s ease;
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* ── Global Toast ── */
+.global-toast {
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  padding: 10px 24px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 9999;
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.global-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.global-toast.error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.global-toast.success {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.global-toast.info {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}

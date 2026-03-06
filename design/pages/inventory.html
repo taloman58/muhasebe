@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stok İşlemleri - GSM OFIS PRO</title>
+    <link rel="stylesheet" href="../styles/variables.css" />
+    <link rel="stylesheet" href="../styles/global.css" />
+    <link rel="stylesheet" href="../styles/layout.css" />
+    <link rel="stylesheet" href="../styles/components.css" />
+    <link rel="stylesheet" href="../styles/stock.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- TITLE BAR (Shared) -->
+      <div class="titlebar">
+        <div class="titlebar-left">
+          <div class="titlebar-logo">G</div>
+          <span class="titlebar-title">GSM OFIS PRO</span>
+          <span class="titlebar-version">v1.0.0</span>
+        </div>
+        <div class="titlebar-right">
+          <button class="titlebar-btn" id="btn-minimize" title="Küçült">─</button>
+          <button class="titlebar-btn" id="btn-maximize" title="Ekranı Kapla">☐</button>
+          <button class="titlebar-btn close" id="btn-close" title="Kapat">✕</button>
+        </div>
+      </div>
+
+      <!-- MENU BAR -->
+      <div class="menubar">
+        <button class="menu-item">Dosya</button>
+        <button class="menu-item">İşlemler</button>
+        <button class="menu-item">Raporlar</button>
+        <button class="menu-item">Araçlar</button>
+        <button class="menu-item">Ayarlar</button>
+        <button class="menu-item">Yardım</button>
+        <div class="menubar-right">
+          <div class="user-badge">
+            <div class="avatar">U</div>
+            <span>Yükleniyor...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN TABS -->
+      <div class="main-tabs" id="main-tabs">
+        <a href="dashboard.html" class="main-tab">
+          <span class="tab-icon">📊</span> Panel
+        </a>
+        <a href="devices.html" class="main-tab">
+          <span class="tab-icon">📱</span> Cihazlarım
+        </a>
+        <a href="inventory.html" class="main-tab">
+          <span class="tab-icon">📦</span> Stok İşlemleri
+        </a>
+        <a href="sales.html" class="main-tab">
+          <span class="tab-icon">💰</span> Satış & Kasa
+        </a>
+        <a href="repairs.html" class="main-tab">
+          <span class="tab-icon">🔧</span> Tamir & Servis
+        </a>
+        <a href="customers.html" class="main-tab">
+          <span class="tab-icon">👥</span> Müşteriler & CRM
+        </a>
+        <a href="reports.html" class="main-tab">
+          <span class="tab-icon">📈</span> Raporlar
+        </a>
+        <a href="settings.html" class="main-tab">
+          <span class="tab-icon">⚙️</span> Ayarlar
+        </a>
+      </div>
+
+      <!-- TICKER BAR -->
+      <div class="ticker-bar" id="ticker-bar">
+        <span class="ticker-label">● CANLI</span>
+        <div class="ticker-track-wrapper">
+          <div class="ticker-track" id="ticker-track">
+            <span class="ticker-item">⟳ Veriler yükleniyor...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTENT AREA -->
+      <div class="content-wrapper">
+        <div class="panel-left">
+          <div class="panel-left-header">ÖZET BİLGİLER</div>
+          <div class="panel-left-content" id="panel-left-content"></div>
+        </div>
+
+        <div class="content-main" id="pages">
+          <div class="page active" id="page-alis">
+            <div class="toolbar">
+              <button class="btn btn-sm purch-sub active" data-purchsub="ekle" onclick="switchPurchSub('ekle')">
+                + Yeni Alış
+              </button>
+              <button class="btn btn-sm purch-sub" data-purchsub="liste" onclick="switchPurchSub('liste')">
+                📋 Geçmiş İşlemler
+              </button>
+              <div class="toolbar-separator"></div>
+              <div class="search-bar" style="width: 220px;" id="purch-search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Tür, kalite, tedarikçi ara..." id="purch-search" />
+              </div>
+            </div>
+
+            <div class="content-body purch-section active" id="purch-ekle">
+              <form class="stock-form" id="purch-add-form" onsubmit="handlePurchSave(event)">
+                <div class="form-section">
+                  <div class="form-section-title">📦 Ürün Bilgileri (Aksesuar / Parça)</div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Tür (Zorunlu)</label>
+                        <select id="purch-type" onchange="toggleCustomType()" required>
+                          <option value="">-- Seçiniz --</option>
+                          <option value="EKRAN">Ekran</option>
+                          <option value="KASA">Kasa</option>
+                          <option value="ŞARJ">Şarj Cihazı</option>
+                          <option value="KIRILMAZCAM">Kırılmaz Cam</option>
+                          <option value="KILIF">Kılıf</option>
+                          <option value="KULAKLIK">Kulaklık</option>
+                          <option value="POWERBANK">Powerbank</option>
+                          <option value="NANOCAM">Nano Cam</option>
+                          <option value="HAYALET">Hayalet Cam</option>
+                          <option value="KABLO">Kablo</option>
+                          <option value="SARJ BAŞLIK">Şarj Başlığı</option>
+                          <option value="DİĞER">DİĞER (Elle Gir)</option>
+                        </select>
+                      </div>
+                      <div class="form-group" id="purch-custom-type-group" style="display: none;">
+                        <label>Özel Tür / Marka Model</label>
+                        <input type="text" id="purch-custom-type" placeholder="Örn: Kordon, Batarya, Vida..." />
+                      </div>
+                      <div class="form-group">
+                        <label>Adet (Zorunlu)</label>
+                        <input type="number" id="purch-qty" placeholder="1" min="1" step="1" required />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Renk <span class="optional">(isteğe bağlı)</span></label>
+                        <input type="text" id="purch-color" placeholder="Örn: Siyah, Mavi" />
+                      </div>
+                      <div class="form-group">
+                        <label>Kalite <span class="optional">(isteğe bağlı)</span></label>
+                        <input type="text" id="purch-quality" placeholder="Örn: Orijinal, Revize, A Kalite" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="form-section-title">🏢 Tedarikçi Bilgileri <span class="optional">(isteğe bağlı)</span></div>
+                  <div class="form-section-body">
+                    <div class="form-row" style="position:relative;">
+                      <div class="form-group">
+                        <label>Ad Soyad / Firma Adı</label>
+                        <input type="text" id="purch-supplier-name" placeholder="Tedarikçi adı" autocomplete="off" />
+                      </div>
+                      <div class="form-group">
+                        <label>Telefon Numarası</label>
+                        <input type="tel" id="purch-supplier-phone" placeholder="05XX XXX XX XX" autocomplete="off" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-section">
+                  <div class="form-section-title">💰 Fiyat Bilgileri</div>
+                  <div class="form-section-body">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Birim Alış Fiyatı (₺) (Zorunlu)</label>
+                        <input type="number" id="purch-price" placeholder="0.00" step="0.01" required />
+                      </div>
+                      <div class="form-group">
+                        <label>Beklenen Satış Fiyatı (₺) (Zorunlu)</label>
+                        <input type="number" id="purch-sale-price" placeholder="0.00" step="0.01" required />
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Ödeme Yöntemi</label>
+                        <select id="purch-payment" required>
+                          <option value="nakit">Nakit</option>
+                          <option value="havale">Havale / EFT</option>
+                          <option value="kredi_karti">Kredi Kartı</option>
+                          <option value="takas">Takas / Cari</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label>Notlar <span class="optional">(isteğe bağlı)</span></label>
+                        <input type="text" id="purch-notes" placeholder="Ekstra notlar..." />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary" id="btn-purch-save">💾 Kaydet</button>
+                  <button type="reset" class="btn" onclick="resetPurchForm()">🗑️ Temizle</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="content-body purch-section" id="purch-liste">
+              <div class="stock-table-wrapper">
+                <table class="data-table" id="purch-table">
+                  <thead>
+                    <tr>
+                      <th>Tarih</th>
+                      <th>Tür</th>
+                      <th>Renk / Kalite</th>
+                      <th>Adet</th>
+                      <th>Alış ₺</th>
+                      <th>Satış ₺</th>
+                      <th>Tedarikçi</th>
+                      <th>Ödeme</th>
+                      <th>İşlem</th>
+                    </tr>
+                  </thead>
+                  <tbody id="purch-tbody"></tbody>
+                </table>
+              </div>
+              <div class="empty-state" id="purch-empty" style="display:none;">
+                <span class="empty-icon">🛒</span>
+                <span class="empty-text">Alış Kaydı Yok</span>
+                <span class="empty-desc">Henüz alış işlemi yapılmamış.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATUS BAR -->
+      <div class="statusbar">
+        <div class="status-item">
+          <span class="status-dot"></span>
+          <span>Bağlantı: Aktif</span>
+        </div>
+        <div class="status-item">
+          <span id="license-display">🔑 Lisans: Hesaplanıyor...</span>
+        </div>
+        <div class="status-item">
+          <span class="status-role">👤 Yükleniyor...</span>
+        </div>
+        <div class="statusbar-right">
+          <span id="status-clock">--:--</span>
+          <span>v1.0.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/error.js"></script>
+    <script src="../js/click.js"></script>
+    <script src="../js/print-utils.js"></script>
+    <script src="../js/purchases-controller.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        if (typeof initSupabase === 'function') initSupabase();
+        if (typeof setupPurchAutocomplete === 'function') setupPurchAutocomplete();
+        if (typeof updateLeftPanel === 'function') updateLeftPanel('alis');
+      });
+    </script>
+  </body>
+</html>
